@@ -9,7 +9,7 @@
         body { 
             font-family: Arial, sans-serif; 
             margin: 20px;
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
         }
         .controls { 
@@ -59,11 +59,10 @@
         .desc::after { content: '\25BC'; }
         
         /* Column widths */
-        th:nth-child(1), td:nth-child(1) { width: 20%; } /* AAGUID */
-        th:nth-child(2), td:nth-child(2) { width: 25%; } /* Name */
-        th:nth-child(3), td:nth-child(3) { width: 6%; } /* Firmware */
-        th:nth-child(4), td:nth-child(4) { width: 29%; } /* Model */
-        th:nth-child(5), td:nth-child(5) { width: 20%; } /* Certification */
+        th:nth-child(1), td:nth-child(1) { width: 25%; } /* Model */
+        th:nth-child(2), td:nth-child(2) { width: 10%; } /* Firmare */
+        th:nth-child(3), td:nth-child(3) { width: 40%; } /* AAGUID */
+        th:nth-child(4), td:nth-child(4) { width: 25%; } /* Certification */
 
         /* Special column styles */
         .monospace {
@@ -71,13 +70,8 @@
         }
 
         /* Hover effect to show full content */
-        td:hover {
-            white-space: normal;
-            overflow: visible;
-            position: relative;
-            z-index: 1;
-            background-color: #fff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        tr:hover {
+            background-color: #f5f5f5;
         }
 
         @media (max-width: 768px) {
