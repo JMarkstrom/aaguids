@@ -9,11 +9,12 @@
         body { font-family: Arial, sans-serif; margin: 20px; }
         input, select { margin-bottom: 10px; }
         table { width: 100%; border-collapse: collapse; }
-        th, td { border: 1px solid #ddd; padding: 8px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
         th { background-color: #f4f4f4; cursor: pointer; position: relative; }
         th::after { content: ''; position: absolute; right: 10px; }
         .asc::after { content: '\25B2'; } /* Up arrow */
         .desc::after { content: '\25BC'; } /* Down arrow */
+        .copy-btn { cursor: pointer; margin-left: 5px; color: blue; text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -71,7 +72,18 @@
                 let tr = document.createElement('tr');
                 headers.forEach(header => {
                     let td = document.createElement('td');
-                    td.textContent = row[header];
+                    if (header.toLowerCase().includes('aaguid')) {
+                        let span = document.createElement('span');
+                        span.textContent = row[header];
+                        let copyBtn = document.createElement('span');
+                        copyBtn.textContent = '📋';
+                        copyBtn.classList.add('copy-btn');
+                        copyBtn.onclick = () => copyToClipboard(row[header]);
+                        td.appendChild(span);
+                        td.appendChild(copyBtn);
+                    } else {
+                        td.textContent = row[header];
+                    }
                     tr.appendChild(td);
                 });
                 tableBody.appendChild(tr);
@@ -108,6 +120,14 @@
             }
             thElement.classList.add(sortOrder[column] === 1 ? 'asc' : 'desc');
             currentSortedColumn = thElement;
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Copied: ' + text);
+            }).catch(err => {
+                console.error('Error copying text: ', err);
+            });
         }
 
         fetchCSV();
