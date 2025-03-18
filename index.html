@@ -68,6 +68,13 @@
         .monospace {
             font-family: 'Courier New', monospace;
         }
+        .copyable {
+            cursor: pointer;
+        }
+        .copied {
+            background-color: #4A9E2A;
+            color: white;
+        }
 
         /* Hover effect to show full content */
         tr:hover {
@@ -148,14 +155,25 @@
             // Render data rows
             data.forEach(row => {
                 let tr = document.createElement('tr');
-                headers.forEach(header => {
+                headers.forEach((header, index) => {
                     let td = document.createElement('td');
                     td.textContent = row[header];
                     if (header === 'Model') {
                         td.style.fontWeight = 'bold';
                     }
-                    if (header === 'AAGUID') {
-                        td.classList.add('monospace');
+                    if (index === 2) { // AAGUID is the third column
+                        td.classList.add('monospace', 'copyable');
+                        td.onclick = async function() {
+                            try {
+                                await navigator.clipboard.writeText(row[header]);
+                                this.classList.add('copied');
+                                setTimeout(() => {
+                                    this.classList.remove('copied');
+                                }, 1000);
+                            } catch (err) {
+                                console.error('Failed to copy text: ', err);
+                            }
+                        };
                     }
                     tr.appendChild(td);
                 });
