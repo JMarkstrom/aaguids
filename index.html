@@ -6,16 +6,83 @@
     <title>YubiKey AAGUIDs</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        .controls { display: flex; gap: 10px; margin-bottom: 10px; }
-        input, select, button { margin-bottom: 10px; }
-        button { padding: 8px 16px; cursor: pointer; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        th { background-color: #4A9E2A; color: white; cursor: pointer; position: relative; }
-        th::after { content: ''; position: absolute; right: 10px; }
-        .asc::after { content: '\25B2'; } /* Up arrow */
-        .desc::after { content: '\25BC'; } /* Down arrow */
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .controls { 
+            display: flex; 
+            gap: 10px; 
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        input, select, button { 
+            margin-bottom: 10px;
+            padding: 8px;
+        }
+        button { 
+            padding: 8px 16px; 
+            cursor: pointer; 
+        }
+        .table-container {
+            overflow-x: auto;
+            margin-bottom: 20px;
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+        th, td { 
+            border: 1px solid #ddd; 
+            padding: 8px; 
+            text-align: left;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        th { 
+            background-color: #4A9E2A; 
+            color: white; 
+            cursor: pointer; 
+            position: relative;
+            user-select: none;
+        }
+        th::after { 
+            content: ''; 
+            position: absolute; 
+            right: 10px; 
+        }
+        .asc::after { content: '\25B2'; }
+        .desc::after { content: '\25BC'; }
+        
+        /* Column widths */
+        th:nth-child(1), td:nth-child(1) { width: 15%; } /* AAGUID */
+        th:nth-child(2), td:nth-child(2) { width: 25%; } /* Name */
+        th:nth-child(3), td:nth-child(3) { width: 20%; } /* Vendor */
+        th:nth-child(4), td:nth-child(4) { width: 20%; } /* Model */
+        th:nth-child(5), td:nth-child(5) { width: 20%; } /* Notes */
+
+        /* Hover effect to show full content */
+        td:hover {
+            white-space: normal;
+            overflow: visible;
+            position: relative;
+            z-index: 1;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+            }
+            th, td {
+                min-width: 150px; /* Ensure minimum width on mobile */
+            }
+        }
     </style>
 </head>
 <body>
@@ -25,10 +92,12 @@
         <button onclick="exportToCSV()">Export CSV</button>
         <button onclick="exportToJSON()">Export JSON</button>
     </div>
-    <table id="csvTable">
-        <thead></thead>
-        <tbody></tbody>
-    </table>
+    <div class="table-container">
+        <table id="csvTable">
+            <thead></thead>
+            <tbody></tbody>
+        </table>
+    </div>
 
     <script>
         const csvUrl = 'https://raw.githubusercontent.com/JMarkstrom/aaguids/main/aaguids.csv';
