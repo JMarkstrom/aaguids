@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AAGUIDs CSV Viewer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        input, select { margin-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; }
+        th { background-color: #f4f4f4; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h2>AAGUIDs CSV Viewer</h2>
+    <input type="text" id="search" placeholder="Search..." oninput="filterTable()">
+    <table id="csvTable">
+        <thead></thead>
+        <tbody></tbody>
+    </table>
+
+    <script>
+        const csvUrl = 'https://raw.githubusercontent.com/JMarkstrom/aaguids/main/aaguids.csv';
+        let csvData = [];
+
+        function fetchCSV() {
+            fetch(csvUrl)
+                .then(response => response.text())
+                .then(csvText => {
+                    Papa.parse(csvText, {
+                        header: true,
+                        skipEmptyLines: true,
+                        complete: function(results) {
+                            csvData = results.data;
+                            renderTable(csvData);
+                        }
+                    });
+                })
+                .catch(error => console.error('Error fetching CSV:', error));
+        }
+
+        function renderTable(data) {
+            const tableHead = document.querySelector('#csvTable thead');
+            const tableBody = document.querySelector('#csvTable tbody');
+            tableHead.innerHTML = '';
+            tableBody.innerHTML = '';
+            
+            if (data.length === 0) return;
+
+            // Render header
+            const headers = Object.keys(data[0]);
+            let headerRow = document.createElement('tr');
+            headers.forEach(header => {
+                let th = document.createElement('th');
+                th.textContent = header;
+                headerRow.appendChild(th);
+            });
+            tableHead.appendChild(headerRow);
+
+            // Render data rows
+            data.forEach(row => {
+                let tr = document.createElement('tr');
+                headers.forEach(header => {
+                    let td = document.createElement('td');
+                    td.textContent = row[header];
+                    tr.appendChild(td);
+                });
+                tableBody.appendChild(tr);
+            });
+        }
+
+        function filterTable() {
+            let searchText = document.getElementById('search').value.toLowerCase();
+            let filteredData = csvData.filter(row => 
+                Object.values(row).some(val => val.toLowerCase().includes(searchText))
+            );
+            renderTable(filteredData);
+        }
+
+        fetchCSV();
+    </script>
+</body>
+</html>
