@@ -146,9 +146,17 @@
             // Render data rows
             data.forEach(row => {
                 let tr = document.createElement('tr');
-                headers.forEach(header => {
+                headers.forEach((header, index) => {
                     let td = document.createElement('td');
                     td.textContent = row[header];
+                    // Make Model column bold
+                    if (header === 'Model') {
+                        td.style.fontWeight = 'bold';
+                    }
+                    // Use monospace font for AAGUID column
+                    if (header === 'AAGUID') {
+                        td.style.fontFamily = 'Courier New, monospace';
+                    }
                     tr.appendChild(td);
                 });
                 tableBody.appendChild(tr);
