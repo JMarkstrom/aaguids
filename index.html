@@ -36,10 +36,8 @@
             cursor: pointer; 
         }
         .table-container {
-            overflow: auto;
             margin-bottom: 20px;
             position: relative;
-            max-height: 70vh;
         }
         table { 
             width: 100%; 
@@ -47,9 +45,7 @@
             table-layout: fixed;
         }
         thead {
-            position: sticky;
-            top: 0;
-            z-index: 1;
+            position: relative;
         }
         th, td { 
             border: 1px solid #ddd; 
@@ -108,7 +104,7 @@
 </head>
 <body>
     <h2>YubiKey AAGUIDs</h2>
-    <p style="color: #666; font-size: 14px; margin-top: -15px; margin-bottom: 20px;">📅 Last updated: March 18, 2024</p>
+    <p style="color: #666; font-size: 14px; margin-top: -15px; margin-bottom: 20px;">📅 Last updated: March 18, 2025</p>
     <div class="controls">
         <div class="search-controls">
             <input type="text" id="search" placeholder="Search..." oninput="filterTable()">
