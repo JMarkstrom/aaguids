@@ -24,6 +24,7 @@
     <script>
         const csvUrl = 'https://raw.githubusercontent.com/JMarkstrom/aaguids/main/aaguids.csv';
         let csvData = [];
+        let sortOrder = {};
 
         function fetchCSV() {
             fetch(csvUrl)
@@ -55,7 +56,9 @@
             headers.forEach(header => {
                 let th = document.createElement('th');
                 th.textContent = header;
+                th.onclick = () => sortTable(header);
                 headerRow.appendChild(th);
+                sortOrder[header] = 1;
             });
             tableHead.appendChild(headerRow);
 
@@ -77,6 +80,21 @@
                 Object.values(row).some(val => val.toLowerCase().includes(searchText))
             );
             renderTable(filteredData);
+        }
+
+        function sortTable(column) {
+            csvData.sort((a, b) => {
+                let valA = a[column].toLowerCase();
+                let valB = b[column].toLowerCase();
+                
+                if (!isNaN(valA) && !isNaN(valB)) {
+                    return (Number(valA) - Number(valB)) * sortOrder[column];
+                }
+                return valA.localeCompare(valB) * sortOrder[column];
+            });
+            
+            sortOrder[column] *= -1; // Toggle sorting order
+            renderTable(csvData);
         }
 
         fetchCSV();
