@@ -36,13 +36,20 @@
             cursor: pointer; 
         }
         .table-container {
-            overflow-x: auto;
+            overflow: auto;
             margin-bottom: 20px;
+            position: relative;
+            max-height: 70vh;
         }
         table { 
             width: 100%; 
             border-collapse: collapse;
             table-layout: fixed;
+        }
+        thead {
+            position: sticky;
+            top: 0;
+            z-index: 1;
         }
         th, td { 
             border: 1px solid #ddd; 
@@ -56,7 +63,6 @@
             background-color: #4A9E2A; 
             color: white; 
             cursor: pointer; 
-            position: relative;
             user-select: none;
         }
         th::after { 
@@ -102,6 +108,7 @@
 </head>
 <body>
     <h2>YubiKey AAGUIDs</h2>
+    <p style="color: #666; font-size: 14px; margin-top: -15px; margin-bottom: 20px;">📅 Last updated: March 19, 2024</p>
     <div class="controls">
         <div class="search-controls">
             <input type="text" id="search" placeholder="Search..." oninput="filterTable()">
@@ -270,7 +277,7 @@
         fetchCSV();
     </script>
     <p style="margin-top: 20px; font-size: 14px; color: red;">
-        This is not an authoritative source for YubiKey AAGUIDs!
+        ⚠️ This is not an authoritative source for YubiKey AAGUIDs!
     </p>
 </body>
 </html>
