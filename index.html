@@ -1,11 +1,3 @@
-Here's your updated HTML with the requested column width adjustments:  
-
-- **Model** is now wider (25%).  
-- **Firmware** is reduced by 70% (6%).  
-- **AAGUID** is wider (20%).  
-- **Certification** remains the same (20%).  
-
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -67,10 +59,11 @@ Here's your updated HTML with the requested column width adjustments:
         .desc::after { content: '\25BC'; }
         
         /* Column widths */
-        th:nth-child(1), td:nth-child(1) { width: 20%; } /* AAGUID (wider) */
-        th:nth-child(2), td:nth-child(2) { width: 25%; } /* Model (wider) */
-        th:nth-child(3), td:nth-child(3) { width: 6%; }  /* Firmware (reduced by 70%) */
-        th:nth-child(4), td:nth-child(4) { width: 20%; } /* Certification (unchanged) */
+        th:nth-child(1), td:nth-child(1) { width: 20%; } /* AAGUID */
+        th:nth-child(2), td:nth-child(2) { width: 25%; } /* Name */
+        th:nth-child(3), td:nth-child(3) { width: 6%; } /* Firmware */
+        th:nth-child(4), td:nth-child(4) { width: 29%; } /* Model */
+        th:nth-child(5), td:nth-child(5) { width: 20%; } /* Certification */
 
         /* Special column styles */
         .monospace {
@@ -244,8 +237,8 @@ Here's your updated HTML with the requested column width adjustments:
 
         fetchCSV();
     </script>
+    <p style="margin-top: 20px; font-size: 14px; color: red;">
+        This is not an authoritative source for YubiKey AAGUIDs!
+    </p>
 </body>
 </html>
-```
-
-This should now match your requested layout. Let me know if you need any further refinements! 🚀
