@@ -10,7 +10,10 @@
         input, select { margin-bottom: 10px; }
         table { width: 100%; border-collapse: collapse; }
         th, td { border: 1px solid #ddd; padding: 8px; }
-        th { background-color: #f4f4f4; cursor: pointer; }
+        th { background-color: #f4f4f4; cursor: pointer; position: relative; }
+        th::after { content: ''; position: absolute; right: 10px; }
+        .asc::after { content: '\25B2'; } /* Up arrow */
+        .desc::after { content: '\25BC'; } /* Down arrow */
     </style>
 </head>
 <body>
@@ -25,6 +28,7 @@
         const csvUrl = 'https://raw.githubusercontent.com/JMarkstrom/aaguids/main/aaguids.csv';
         let csvData = [];
         let sortOrder = {};
+        let currentSortedColumn = null;
 
         function fetchCSV() {
             fetch(csvUrl)
@@ -56,7 +60,7 @@
             headers.forEach(header => {
                 let th = document.createElement('th');
                 th.textContent = header;
-                th.onclick = () => sortTable(header);
+                th.onclick = () => sortTable(header, th);
                 headerRow.appendChild(th);
                 sortOrder[header] = 1;
             });
@@ -82,7 +86,7 @@
             renderTable(filteredData);
         }
 
-        function sortTable(column) {
+        function sortTable(column, thElement) {
             csvData.sort((a, b) => {
                 let valA = a[column].toLowerCase();
                 let valB = b[column].toLowerCase();
@@ -94,7 +98,16 @@
             });
             
             sortOrder[column] *= -1; // Toggle sorting order
+            updateHeaders(column, thElement);
             renderTable(csvData);
+        }
+
+        function updateHeaders(column, thElement) {
+            if (currentSortedColumn) {
+                currentSortedColumn.classList.remove('asc', 'desc');
+            }
+            thElement.classList.add(sortOrder[column] === 1 ? 'asc' : 'desc');
+            currentSortedColumn = thElement;
         }
 
         fetchCSV();
