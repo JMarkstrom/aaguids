@@ -17,6 +17,15 @@
             gap: 10px; 
             margin-bottom: 10px;
             flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .search-controls {
+            display: flex;
+            gap: 10px;
+        }
+        .export-controls {
+            display: flex;
+            gap: 10px;
         }
         input, select, button { 
             margin-bottom: 10px;
@@ -94,9 +103,14 @@
 <body>
     <h2>YubiKey AAGUIDs</h2>
     <div class="controls">
-        <input type="text" id="search" placeholder="Search..." oninput="filterTable()">
-        <button onclick="exportToCSV()">Export CSV</button>
-        <button onclick="exportToJSON()">Export JSON</button>
+        <div class="search-controls">
+            <input type="text" id="search" placeholder="Search..." oninput="filterTable()">
+            <button onclick="clearFilter()">Clear</button>
+        </div>
+        <div class="export-controls">
+            <button onclick="exportToCSV()">Export CSV</button>
+            <button onclick="exportToJSON()">Export JSON</button>
+        </div>
     </div>
     <div class="table-container">
         <table id="csvTable">
@@ -111,6 +125,12 @@
         let filteredData = [];
         let sortOrder = {};
         let currentSortedColumn = null;
+
+        function clearFilter() {
+            document.getElementById('search').value = '';
+            filteredData = [...csvData];
+            renderTable(filteredData);
+        }
 
         function fetchCSV() {
             fetch(csvUrl)
