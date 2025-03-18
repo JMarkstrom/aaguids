@@ -7,7 +7,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <style>
         body { font-family: Arial, sans-serif; margin: 20px; }
-        input, select { margin-bottom: 10px; }
+        .controls { display: flex; gap: 10px; margin-bottom: 10px; }
+        input, select, button { margin-bottom: 10px; }
+        button { padding: 8px 16px; cursor: pointer; }
         table { width: 100%; border-collapse: collapse; }
         th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
         th { background-color: #4A9E2A; color: white; cursor: pointer; position: relative; }
@@ -18,7 +20,11 @@
 </head>
 <body>
     <h2>YubiKey AAGUIDs</h2>
-    <input type="text" id="search" placeholder="Search..." oninput="filterTable()">
+    <div class="controls">
+        <input type="text" id="search" placeholder="Search..." oninput="filterTable()">
+        <button onclick="exportToCSV()">Export CSV</button>
+        <button onclick="exportToJSON()">Export JSON</button>
+    </div>
     <table id="csvTable">
         <thead></thead>
         <tbody></tbody>
@@ -27,6 +33,7 @@
     <script>
         const csvUrl = 'https://raw.githubusercontent.com/JMarkstrom/aaguids/main/aaguids.csv';
         let csvData = [];
+        let filteredData = [];
         let sortOrder = {};
         let currentSortedColumn = null;
 
@@ -39,7 +46,8 @@
                         skipEmptyLines: true,
                         complete: function(results) {
                             csvData = results.data;
-                            renderTable(csvData);
+                            filteredData = [...csvData];
+                            renderTable(filteredData);
                         }
                     });
                 })
@@ -62,7 +70,7 @@
                 th.textContent = header;
                 th.onclick = () => sortTable(header, th);
                 headerRow.appendChild(th);
-                sortOrder[header] = 1;
+                if (!sortOrder[header]) sortOrder[header] = 1;
             });
             tableHead.appendChild(headerRow);
 
@@ -80,26 +88,37 @@
 
         function filterTable() {
             let searchText = document.getElementById('search').value.toLowerCase();
-            let filteredData = csvData.filter(row => 
+            filteredData = csvData.filter(row => 
                 Object.values(row).some(val => val.toLowerCase().includes(searchText))
             );
-            renderTable(filteredData);
+            // Reapply current sort if exists
+            if (currentSortedColumn) {
+                sortTable(currentSortedColumn.textContent, currentSortedColumn);
+            } else {
+                renderTable(filteredData);
+            }
         }
 
         function sortTable(column, thElement) {
-            csvData.sort((a, b) => {
+            filteredData.sort((a, b) => {
                 let valA = a[column].toLowerCase();
                 let valB = b[column].toLowerCase();
                 
-                if (!isNaN(valA) && !isNaN(valB)) {
-                    return (Number(valA) - Number(valB)) * sortOrder[column];
+                // Try to parse as numbers if possible
+                const numA = parseFloat(valA);
+                const numB = parseFloat(valB);
+                
+                if (!isNaN(numA) && !isNaN(numB)) {
+                    return (numA - numB) * sortOrder[column];
                 }
+                
+                // If not numbers, compare as strings
                 return valA.localeCompare(valB) * sortOrder[column];
             });
             
             sortOrder[column] *= -1; // Toggle sorting order
             updateHeaders(column, thElement);
-            renderTable(csvData);
+            renderTable(filteredData);
         }
 
         function updateHeaders(column, thElement) {
@@ -108,6 +127,29 @@
             }
             thElement.classList.add(sortOrder[column] === 1 ? 'asc' : 'desc');
             currentSortedColumn = thElement;
+        }
+
+        function exportToCSV() {
+            const headers = Object.keys(csvData[0]);
+            const csvContent = [
+                headers.join(','),
+                ...csvData.map(row => headers.map(header => row[header]).join(','))
+            ].join('\n');
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'yubikey_aaguids.csv';
+            link.click();
+        }
+
+        function exportToJSON() {
+            const jsonContent = JSON.stringify(csvData, null, 2);
+            const blob = new Blob([jsonContent], { type: 'application/json;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'yubikey_aaguids.json';
+            link.click();
         }
 
         fetchCSV();
