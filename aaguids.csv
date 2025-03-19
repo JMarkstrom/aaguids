@@ -4,80 +4,80 @@ YubiKey 5,5.2 / 5.4,ee882879-721c-4913-9775-3dfcce97072a,Level 1
 YubiKey 5 NFC,5.1,fa2b99dc-9e39-4257-8f92-4a30d23c4118,Level 1
 YubiKey 5 NFC,5.2 / 5.4,2fc0579f-8113-47ea-b116-bb5a8db9202a,Level 1
 YubiKey 5 NFC,5.7,a25342c0-3cdc-4414-8e46-f4807fca511c,Level 2 
-YubiKey 5 NFC,5.7.4,d7781e5d-e353-46aa-afe2-3ca49f13332a,Level 2
+YubiKey 5 NFC,5.7,d7781e5d-e353-46aa-afe2-3ca49f13332a,Level 2
 YubiKey 5 NFC CSPN,5.4,c1f9a0bc-1dd2-404a-b27f-8e29047a43fd,Level 2
 YubiKey 5 NFC FIPS,5.4,c1f9a0bc-1dd2-404a-b27f-8e29047a43fd,Level 2
-YubiKey 5 NFC FIPS,5.7.4,fcc0118f-cd45-435b-8da1-9782b2da0715,Level 2
-YubiKey 5 NFC FIPS,5.7.4,79f3c8ba-9e35-484b-8f47-53a5a0f5c630,Level 2       
+YubiKey 5 NFC FIPS,5.7,fcc0118f-cd45-435b-8da1-9782b2da0715,Level 2
+YubiKey 5 NFC FIPS,5.7,79f3c8ba-9e35-484b-8f47-53a5a0f5c630,Level 2       
 YubiKey 5 NFC,5.7,1ac71f64-468d-4fe0-bef1-0e5f2f551f18,Level 2
-YubiKey 5 NFC,5.7.4,6ab56fad-881f-4a43-acb2-0be065924522,Level 2
+YubiKey 5 NFC,5.7,6ab56fad-881f-4a43-acb2-0be065924522,Level 2
 YubiKey 5C NFC,5.2 / 5.4,2fc0579f-8113-47ea-b116-bb5a8db9202a,Level 1
 YubiKey 5C NFC,5.7,a25342c0-3cdc-4414-8e46-f4807fca511c,Level 2
-YubiKey 5C NFC,5.7.4,d7781e5d-e353-46aa-afe2-3ca49f13332a,Level 2
+YubiKey 5C NFC,5.7,d7781e5d-e353-46aa-afe2-3ca49f13332a,Level 2
 YubiKey 5C NFC CSPN,5.4,2fc0579f-8113-47ea-b116-bb5a8db9202a,Level 1
 YubiKey 5C NFC FIPS,5.4,c1f9a0bc-1dd2-404a-b27f-8e29047a43fd,Level 2
-YubiKey 5C NFC FIPS,5.7.4,fcc0118f-cd45-435b-8da1-9782b2da0715,Level 2
-YubiKey 5C NFC FIPS,5.7.4,79f3c8ba-9e35-484b-8f47-53a5a0f5c630,Level 2
+YubiKey 5C NFC FIPS,5.7,fcc0118f-cd45-435b-8da1-9782b2da0715,Level 2
+YubiKey 5C NFC FIPS,5.7,79f3c8ba-9e35-484b-8f47-53a5a0f5c630,Level 2
 YubiKey 5C NFC,5.7,1ac71f64-468d-4fe0-bef1-0e5f2f551f18,Level 2
-YubiKey 5C NFC,5.7.4,6ab56fad-881f-4a43-acb2-0be065924522,Level 2
+YubiKey 5C NFC,5.7,6ab56fad-881f-4a43-acb2-0be065924522,Level 2
 YubiKey 5 Nano,5.1,cb69481e-8ff7-4039-93ec-0a2729a154a8,Level 1
 YubiKey 5 Nano,5.2 / 5.4,ee882879-721c-4913-9775-3dfcce97072a,Level 1
 YubiKey 5 Nano,5.7,19083c3d-8383-4b18-bc03-8f1c9ab2fd1b,Level 2
-YubiKey 5 Nano,5.7.4,ff4dac45-ede8-4ec2-aced-cf66103f4335,Level 2
+YubiKey 5 Nano,5.7,ff4dac45-ede8-4ec2-aced-cf66103f4335,Level 2
 YubiKey 5 Nano FIPS,5.4,73bb0cd4-e502-49b8-9c6f-b59445bf720b,Level 2
 YubiKey 5 Nano CSPN,5.4,ee882879-721c-4913-9775-3dfcce97072a,Level 1
-YubiKey 5 Nano FIPS,5.7.4,57f7de54-c807-4eab-b1c6-1c9be7984e92,Level 2
-YubiKey 5 Nano FIPS,5.7.4,905b4cb4-ed6f-4da9-92fc-45e0d4e9b5c7,Level 2
+YubiKey 5 Nano FIPS,5.7,57f7de54-c807-4eab-b1c6-1c9be7984e92,Level 2
+YubiKey 5 Nano FIPS,5.7,905b4cb4-ed6f-4da9-92fc-45e0d4e9b5c7,Level 2
 YubiKey 5 Nano,5.7,20ac7a17-c814-4833-93fe-539f0d5e3389,Level 2
-YubiKey 5 Nano,5.7.4,4599062e-6926-4fe7-9566-9e8fb1aedaa0,Level 2
+YubiKey 5 Nano,5.7,4599062e-6926-4fe7-9566-9e8fb1aedaa0,Level 2
 YubiKey 5C Nano,5.1,cb69481e-8ff7-4039-93ec-0a2729a154a8,Level 1
 YubiKey 5C Nano,5.2 / 5.4,ee882879-721c-4913-9775-3dfcce97072a,Level 1
 YubiKey 5C Nano,5.7,19083c3d-8383-4b18-bc03-8f1c9ab2fd1b,Level 2
-YubiKey 5C Nano,5.7.4,ff4dac45-ede8-4ec2-aced-cf66103f4335,Level 2
+YubiKey 5C Nano,5.7,ff4dac45-ede8-4ec2-aced-cf66103f4335,Level 2
 YubiKey 5C Nano CSPN,5.4,ee882879-721c-4913-9775-3dfcce97072a,Level 1
 YubiKey 5C Nano FIPS,5.4,73bb0cd4-e502-49b8-9c6f-b59445bf720b,Level 2
-YubiKey 5C Nano FIPS,5.7.4,57f7de54-c807-4eab-b1c6-1c9be7984e92,Level 2
-YubiKey 5C Nano FIPS,5.7.4,905b4cb4-ed6f-4da9-92fc-45e0d4e9b5c7,Level 2
+YubiKey 5C Nano FIPS,5.7,57f7de54-c807-4eab-b1c6-1c9be7984e92,Level 2
+YubiKey 5C Nano FIPS,5.7,905b4cb4-ed6f-4da9-92fc-45e0d4e9b5c7,Level 2
 YubiKey 5C Nano,5.7,20ac7a17-c814-4833-93fe-539f0d5e3389,Level 2
-YubiKey 5C Nano,5.7.4,4599062e-6926-4fe7-9566-9e8fb1aedaa0,Level 2
+YubiKey 5C Nano,5.7,4599062e-6926-4fe7-9566-9e8fb1aedaa0,Level 2
 YubiKey 5C,5.1,cb69481e-8ff7-4039-93ec-0a2729a154a8,Level 1
 YubiKey 5C,5.2 / 5.4,ee882879-721c-4913-9775-3dfcce97072a,Level 1
 YubiKey 5C,5.7,19083c3d-8383-4b18-bc03-8f1c9ab2fd1b,Level 2
-YubiKey 5C,5.7.4,ff4dac45-ede8-4ec2-aced-cf66103f4335,Level 2
+YubiKey 5C,5.7,ff4dac45-ede8-4ec2-aced-cf66103f4335,Level 2
 YubiKey 5C CSPN,5.4,ee882879-721c-4913-9775-3dfcce97072a,Level 1
 YubiKey 5C FIPS,5.4,73bb0cd4-e502-49b8-9c6f-b59445bf720b,Level 2
-YubiKey 5C FIPS,5.7.4,57f7de54-c807-4eab-b1c6-1c9be7984e92,Level 2
-YubiKey 5C FIPS,5.7.4,905b4cb4-ed6f-4da9-92fc-45e0d4e9b5c7,Level 2
+YubiKey 5C FIPS,5.7,57f7de54-c807-4eab-b1c6-1c9be7984e92,Level 2
+YubiKey 5C FIPS,5.7,905b4cb4-ed6f-4da9-92fc-45e0d4e9b5c7,Level 2
 YubiKey 5C,5.7,20ac7a17-c814-4833-93fe-539f0d5e3389,Level 2
-YubiKey 5C,5.7.4,4599062e-6926-4fe7-9566-9e8fb1aedaa0,Level 2
+YubiKey 5C,5.7,4599062e-6926-4fe7-9566-9e8fb1aedaa0,Level 2
 YubiKey 5Ci,5.2 / 5.4,c5ef55ff-ad9a-4b9f-b580-adebafe026d0,Level 1
 YubiKey 5Ci,5.7,a02167b9-ae71-4ac7-9a07-06432ebb6f1c,Level 2
-YubiKey 5Ci,5.7.4,24673149-6c86-42e7-98d9-433fb5b73296,Level 2
+YubiKey 5Ci,5.7,24673149-6c86-42e7-98d9-433fb5b73296,Level 2
 YubiKey 5Ci CSPN,5.4,c5ef55ff-ad9a-4b9f-b580-adebafe026d0,Level 1
 YubiKey 5Ci FIPS,5.4,85203421-48f9-4355-9bc8-8a53846e5083,Level 2
-YubiKey 5Ci FIPS,5.7.4,7b96457d-e3cd-432b-9ceb-c9fdd7ef7432,Level 2
-YubiKey 5Ci FIPS,5.7.4,3a662962-c6d4-4023-bebb-98ae92e78e20,Level 2
+YubiKey 5Ci FIPS,5.7,7b96457d-e3cd-432b-9ceb-c9fdd7ef7432,Level 2
+YubiKey 5Ci FIPS,5.7,3a662962-c6d4-4023-bebb-98ae92e78e20,Level 2
 YubiKey 5Ci,5.7,b90e7dc1-316e-4fee-a25a-56a666a670fe,Level 2
 YubiKey 5Ci,5.7,3b24bf49-1d45-4484-a917-13175df0867b,Level 2
 YubiKey Bio FIDO Ed.,5.5 / 5.6,d8522d9f-575b-4866-88a9-ba99fa02f35b,Level 1
 YubiKey Bio FIDO Ed.,5.7,dd86a2da-86a0-4cbe-b462-4bd31f57bc6f,Level 2
-YubiKey Bio FIDO Ed.,5.7.4,7409272d-1ff9-4e10-9fc9-ac0019c124fd,Level 2
+YubiKey Bio FIDO Ed.,5.7,7409272d-1ff9-4e10-9fc9-ac0019c124fd,Level 2
 YubiKey Bio FIDO Ed.,5.7,8c39ee86-7f9a-4a95-9ba3-f6b097e5c2ee,Level 2
-YubiKey Bio FIDO Ed.,5.7.4,ad08c78a-4e41-49b9-86a2-ac15b06899e2,Level 2
+YubiKey Bio FIDO Ed.,5.7,ad08c78a-4e41-49b9-86a2-ac15b06899e2,Level 2
 YubiKey Bio MPE,5.6,7d1351a6-e097-4852-b8bf-c9ac5c9ce4a3,Level 1
 YubiKey Bio MPE,5.7,90636e1f-ef82-43bf-bdcf-5255f139d12f,Level 2
-YubiKey Bio MPE,5.7.4,34744913-4f57-4e6e-a527-e9ec3c4b94e6,Level 2
+YubiKey Bio MPE,5.7,34744913-4f57-4e6e-a527-e9ec3c4b94e6,Level 2
 YubiKey Bio MPE,5.7,97e6a830-c952-4740-95fc-7c78dc97ce47,Level 2
-YubiKey Bio MPE,5.7.4,6ec5cff2-a0f9-4169-945b-f33b563f7b99,Level 2
+YubiKey Bio MPE,5.7,6ec5cff2-a0f9-4169-945b-f33b563f7b99,Level 2
 Security Key,5.1,f8a011f3-8c0a-4d15-8006-17111f9edc7d,Level 1
 Security Key,5.2 / 5.4,b92c3f9a-c014-4056-887f-140a2501163b,Level 1
 Security Key NFC,5.1,6d44ba9b-f6ec-2e49-b930-0c8fe920cb73,Level 1
 Security Key NFC,5.2 / 5.4,149a2021-8ef6-4133-96b8-81f8d5b7f1f5,Level 1
 Security Key NFC,5.4,a4e9fc6d-4cbe-4758-b8ba-37598bb5bbaa,Level 2
 Security Key NFC,5.7,e77e3c64-05e3-428b-8824-0cbeb04b829d,Level 2
-Security Key NFC,5.7.4,b7d3f68e-88a6-471e-9ecf-2df26d041ede,Level 2
+Security Key NFC,5.7,b7d3f68e-88a6-471e-9ecf-2df26d041ede,Level 2
 Security Key NFC Enterprise Ed.,5.4,0bb43545-fd2c-4185-87dd-feb0b2916ace,Level 2
 Security Key NFC Enterprise Ed.,5.7,47ab2fb4-66ac-4184-9ae1-86be814012d5,Level 2
-Security Key NFC Enterprise Ed.,5.7.4,ed042a3a-4b22-4455-bb69-a267b652ae7e,Level 2
+Security Key NFC Enterprise Ed.,5.7,ed042a3a-4b22-4455-bb69-a267b652ae7e,Level 2
 Security Key NFC Enterprise Ed.,5.7,9ff4cc65-6154-4fff-ba09-9e2af7882ad2,Level 2
-Security Key NFC Enterprise Ed.,5.7.4,6ab56fad-881f-4a43-acb2-0be065924522,Level 2
+Security Key NFC Enterprise Ed.,5.7,6ab56fad-881f-4a43-acb2-0be065924522,Level 2
