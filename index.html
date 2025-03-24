@@ -248,10 +248,10 @@
         }
 
         function exportToCSV() {
-            const headers = Object.keys(csvData[0]);
+            const headers = Object.keys(filteredData[0]);
             const csvContent = [
                 headers.join(','),
-                ...csvData.map(row => headers.map(header => row[header]).join(','))
+                ...filteredData.map(row => headers.map(header => row[header]).join(','))
             ].join('\n');
 
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -262,7 +262,7 @@
         }
 
         function exportToJSON() {
-            const jsonContent = JSON.stringify(csvData, null, 2);
+            const jsonContent = JSON.stringify(filteredData, null, 2);
             const blob = new Blob([jsonContent], { type: 'application/json;charset=utf-8;' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
