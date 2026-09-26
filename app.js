@@ -149,6 +149,7 @@ function updateHeaderIndicators() {
 }
 
 function renderBody() {
+    hideCopyTip();
     els.tbody.innerHTML = '';
     if (filteredData.length === 0) {
         const tr = document.createElement('tr');
@@ -170,18 +171,9 @@ function renderBody() {
             if (header === 'Model') td.classList.add('model-cell');
             if (header === 'AAGUID') {
                 td.classList.add('monospace', 'copyable');
+                td.tabIndex = 0;
                 td.setAttribute('role', 'button');
-                td.setAttribute('tabindex', '0');
-                td.setAttribute('title', 'Click to copy');
-                td.setAttribute('aria-label', 'Copy AAGUID ' + value);
-                const copy = () => copyToClipboard(value, td);
-                td.addEventListener('click', copy);
-                td.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        copy();
-                    }
-                });
+                td.setAttribute('aria-label', 'Copy AAGUID');
             }
             tr.appendChild(td);
         });
@@ -190,12 +182,58 @@ function renderBody() {
     els.tbody.appendChild(frag);
 }
 
+const copyTip = document.createElement('div');
+copyTip.className = 'copy-tooltip';
+copyTip.hidden = true;
+document.body.appendChild(copyTip);
+
+let tipTarget = null;
+let copiedTimer = null;
+
+function copyableFrom(target) {
+    if (!(target instanceof Element)) return null;
+    const td = target.closest('.copyable');
+    return td && els.tbody.contains(td) ? td : null;
+}
+
+function positionCopyTip(el) {
+    const rect = el.getBoundingClientRect();
+    const tipRect = copyTip.getBoundingClientRect();
+    let left = rect.left;
+    let top = rect.top - tipRect.height - 6;
+    if (top < 8) top = rect.bottom + 6;
+    const maxLeft = window.innerWidth - tipRect.width - 8;
+    if (left > maxLeft) left = Math.max(8, maxLeft);
+    copyTip.style.left = left + 'px';
+    copyTip.style.top = top + 'px';
+}
+
+function showCopyTip(el, text) {
+    copyTip.textContent = text;
+    copyTip.hidden = false;
+    positionCopyTip(el);
+}
+
+function hideCopyTip() {
+    copyTip.hidden = true;
+    tipTarget = null;
+}
+
+function showIdleTip(td) {
+    tipTarget = td;
+    showCopyTip(td, 'Copy AAGUID');
+}
+
 async function copyToClipboard(value, td) {
     try {
         await navigator.clipboard.writeText(value);
-        td.classList.add('copied');
-        announce('AAGUID copied to clipboard');
-        setTimeout(() => td.classList.remove('copied'), 1000);
+        tipTarget = td;
+        showCopyTip(td, 'Copied');
+        announce('Copied');
+        clearTimeout(copiedTimer);
+        copiedTimer = setTimeout(() => {
+            if (tipTarget === td) showCopyTip(td, 'Copy AAGUID');
+        }, 1000);
     } catch (err) {
         console.error('Failed to copy text:', err);
         announce('Copy failed');
@@ -269,6 +307,39 @@ function download(content, filename, mime) {
     document.body.removeChild(link);
     setTimeout(() => URL.revokeObjectURL(url), 0);
 }
+
+els.tbody.addEventListener('mouseover', (e) => {
+    const td = copyableFrom(e.target);
+    if (!td || tipTarget === td) return;
+    showIdleTip(td);
+});
+els.tbody.addEventListener('mouseout', (e) => {
+    const td = copyableFrom(e.target);
+    if (!td || copyableFrom(e.relatedTarget) === td) return;
+    if (tipTarget === td) hideCopyTip();
+});
+els.tbody.addEventListener('focusin', (e) => {
+    const td = copyableFrom(e.target);
+    if (td) showIdleTip(td);
+});
+els.tbody.addEventListener('focusout', (e) => {
+    const td = copyableFrom(e.target);
+    if (td && tipTarget === td) hideCopyTip();
+});
+els.tbody.addEventListener('click', (e) => {
+    const td = copyableFrom(e.target);
+    if (td) copyToClipboard(td.textContent, td);
+});
+els.tbody.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    const td = copyableFrom(e.target);
+    if (!td) return;
+    e.preventDefault();
+    copyToClipboard(td.textContent, td);
+});
+window.addEventListener('scroll', () => {
+    if (tipTarget) positionCopyTip(tipTarget);
+}, true);
 
 els.search.addEventListener('input', debounce(applyFilter, 120));
 els.clearBtn.addEventListener('click', clearFilter);

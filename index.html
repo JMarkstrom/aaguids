@@ -222,19 +222,28 @@
         .monospace { font-family: 'Courier New', Consolas, monospace; }
         .model-cell { font-weight: 600; }
 
-        .copyable { cursor: copy; }
-        .copyable::after {
-            content: ' \1F4CB';
-            opacity: 0;
-            margin-left: 6px;
-            font-size: 0.85em;
-            transition: opacity 120ms ease;
+        .copyable { cursor: pointer; }
+        .copy-tooltip {
+            position: fixed;
+            z-index: 20;
+            margin: 0;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background: #1a1a1a;
+            color: #ffffff;
+            font-family: 'Inter', system-ui, sans-serif;
+            font-size: 12px;
+            font-weight: 400;
+            line-height: 1.45;
+            white-space: nowrap;
+            pointer-events: none;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
         }
-        .copyable:hover::after,
-        .copyable:focus-visible::after { opacity: 0.7; }
-        .copied {
-            background-color: var(--yubi-green) !important;
-            color: #ffffff !important;
+        @media (prefers-color-scheme: dark) {
+            .copy-tooltip {
+                background: #e8f0e6;
+                color: #0a120c;
+            }
         }
 
         .empty-state {
@@ -273,7 +282,7 @@
 <body>
     <main class="content">
         <h1 class="page-title">YubiKey AAGUIDs</h1>
-        <p class="updated"><span aria-hidden="true">&#128197;</span> Last updated: <time datetime="2026-09-25">May 30, 2026</time></p>
+        <p class="updated"><span aria-hidden="true">&#128197;</span> Last updated: <time datetime="2026-09-26">September 26, 2026</time></p>
 
         <div class="card">
             <div class="controls">
