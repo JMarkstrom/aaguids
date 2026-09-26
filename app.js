@@ -169,6 +169,17 @@ function renderBody() {
             const value = safeStr(row[header]);
             td.textContent = value;
             if (header === 'Model') td.classList.add('model-cell');
+            if (header === 'Certification') {
+                const level = value.toLowerCase();
+                const tone = level.includes('2') ? 'cert-l2' : level.includes('1') ? 'cert-l1' : '';
+                if (tone) {
+                    const chip = document.createElement('span');
+                    chip.className = 'cert ' + tone;
+                    chip.textContent = value;
+                    td.textContent = '';
+                    td.appendChild(chip);
+                }
+            }
             if (header === 'AAGUID') {
                 td.classList.add('monospace', 'copyable');
                 td.tabIndex = 0;

@@ -222,6 +222,33 @@
         .monospace { font-family: 'Courier New', Consolas, monospace; }
         .model-cell { font-weight: 600; }
 
+        .cert {
+            display: inline-block;
+            padding: 1px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+        .cert-l1 {
+            color: #c92a2a;
+            background: #ffe3e3;
+        }
+        .cert-l2 {
+            color: #2b8a3e;
+            background: #d3f9d8;
+        }
+        @media (prefers-color-scheme: dark) {
+            .cert-l1 {
+                color: #ffc9c9;
+                background: rgba(224, 49, 49, 0.22);
+            }
+            .cert-l2 {
+                color: #b2f2bb;
+                background: rgba(47, 158, 68, 0.22);
+            }
+        }
+
         .copyable { cursor: pointer; }
         .copy-tooltip {
             position: fixed;
