@@ -1,10 +1,7 @@
 # YubiKey AAGUIDs
-_This repository hosts a webpage to search, filter and export YubiKey AAGUIDs._    
+_This repository hosts a 🌐[webpage](https://JMarkstrom.github.io/aaguids/) to search, filter and export YubiKey AAGUIDs._    
 
-## 🗒️ Note
-CSPN YubiKeys have been excluded since AAGUID overlaps with standard models.
-
-### 🌐 [Click here](https://JMarkstrom.github.io/aaguids/)
+**Note**: CSPN YubiKeys have been excluded since AAGUID overlaps with standard models.
 
 ## ™️ Trademark notice
 YubiKey is a trademark of Yubico. This project is independent of and is not affiliated with, endorsed by, or sponsored by Yubico.
