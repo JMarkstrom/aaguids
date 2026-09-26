@@ -1,6 +1,9 @@
 # YubiKey AAGUIDs
 _This repository hosts a webpage to search, filter and export YubiKey AAGUIDs._    
 
+## 🗒️ Note
+CSPN YubiKeys have been excluded since AAGUID overlaps with standard models.
+
 ### 🌐 [Click here](https://JMarkstrom.github.io/aaguids/)
 
 ## ™️ Trademark notice
