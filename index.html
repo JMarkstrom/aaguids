@@ -20,9 +20,7 @@
         :root {
             color-scheme: light dark;
             --yubi-dark: #014421;
-            --yubi-green: #008000;
             --yubi-brand: #76B93D;
-            --yubi-lime: #A7FC00;
 
             --bg: #fafbf9;
             --surface: #ffffff;
@@ -31,11 +29,9 @@
             --border: #c8dcc4;
             --row-stripe: #f5f9f3;
             --row-hover: #eef8e4;
-            --header-fg: #ffffff;
 
-            --warn: #8b2500;
             --status-bg: #f5f9f0;
-            --status-fg: #014421;
+            --status-fg: var(--yubi-dark);
             --input-bg: #ffffff;
             --shadow: 0 1px 3px rgba(1, 68, 33, 0.08), 0 4px 12px rgba(1, 68, 33, 0.04);
         }
@@ -49,7 +45,6 @@
                 --row-stripe: #0c1610;
                 --row-hover: #142818;
 
-                --warn: #ff8a80;
                 --status-bg: #142818;
                 --status-fg: #b8d4c0;
                 --input-bg: #0c1610;
@@ -76,14 +71,18 @@
             padding-right: 20px;
         }
 
+        .page-header {
+            margin-bottom: 20px;
+        }
         .page-title {
-            margin: 0 0 4px;
+            margin: 0;
             font-size: 1.5rem;
             font-weight: 700;
             letter-spacing: -0.02em;
+            color: var(--fg);
         }
         .updated {
-            margin: 0 0 20px;
+            margin: 4px 0 0;
             font-size: 0.875rem;
             color: var(--muted);
         }
@@ -138,7 +137,7 @@
             border-color: var(--yubi-brand);
         }
         button:focus-visible {
-            outline: 2px solid var(--yubi-green);
+            outline: 2px solid var(--yubi-brand);
             outline-offset: 2px;
         }
 
@@ -163,6 +162,7 @@
             border-radius: 6px;
             overflow: hidden;
             border: 1px solid var(--border);
+            border-top: 3px solid var(--yubi-brand);
         }
         table {
             width: 100%;
@@ -178,20 +178,19 @@
             white-space: nowrap;
         }
         th {
-            background-color: var(--yubi-dark);
-            color: var(--header-fg);
+            background-color: var(--surface);
+            color: var(--fg);
             cursor: pointer;
             user-select: none;
             position: relative;
             padding-right: 28px;
             font-weight: 600;
             font-size: 0.8125rem;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-            border-bottom: none;
+            letter-spacing: 0;
+            border-bottom: 1px solid var(--border);
         }
         th:focus-visible {
-            outline: 2px solid var(--yubi-lime);
+            outline: 2px solid var(--yubi-brand);
             outline-offset: -3px;
         }
         th::after {
@@ -269,8 +268,8 @@
             background: #ffe3e3;
         }
         .cert-l2 {
-            color: #2b8a3e;
-            background: #d3f9d8;
+            color: #76B93D;
+            background: #eef6dc;
         }
         @media (prefers-color-scheme: dark) {
             .cert-l1 {
@@ -278,8 +277,8 @@
                 background: rgba(224, 49, 49, 0.22);
             }
             .cert-l2 {
-                color: #b2f2bb;
-                background: rgba(47, 158, 68, 0.22);
+                color: #76B93D;
+                background: rgba(118, 185, 61, 0.22);
             }
         }
 
@@ -315,9 +314,9 @@
         }
 
         .disclaimer {
-            margin: 20px 0 0;
+            margin: 4px 0 0;
             font-size: 0.875rem;
-            color: var(--warn);
+            color: var(--muted);
         }
 
         .sr-only {
@@ -342,8 +341,11 @@
 </head>
 <body>
     <main class="content">
-        <h1 class="page-title">YubiKey AAGUIDs</h1>
-        <p class="updated"><span aria-hidden="true">&#128197;</span> Last updated: <time datetime="2026-09-26">September 26, 2026</time></p>
+        <header class="page-header">
+            <h1 class="page-title">YubiKey AAGUIDs</h1>
+            <p class="disclaimer">This is not an authoritative source for YubiKey AAGUIDs.</p>
+            <p class="updated">Last updated: <time datetime="2026-09-26">September 26, 2026</time></p>
+        </header>
 
         <div class="card">
             <div class="controls">
@@ -369,8 +371,6 @@
                 </table>
             </div>
         </div>
-
-        <p class="disclaimer">This is not an authoritative source for YubiKey AAGUIDs!</p>
     </main>
 
     <div id="a11y-live" class="sr-only" aria-live="polite" aria-atomic="true"></div>
