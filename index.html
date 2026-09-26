@@ -221,6 +221,40 @@
 
         .monospace { font-family: 'Courier New', Consolas, monospace; }
         .model-cell { font-weight: 600; }
+        .model-card {
+            position: fixed;
+            z-index: 21;
+            margin: 0;
+            padding: 10px 12px 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            pointer-events: none;
+        }
+        .model-card img {
+            display: block;
+            height: 160px;
+            width: auto;
+            max-width: 140px;
+            object-fit: contain;
+            background: #ffffff;
+            border-radius: 4px;
+        }
+        .model-card figcaption {
+            margin: 0;
+            max-width: 140px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            line-height: 1.3;
+            text-align: center;
+            color: var(--fg);
+        }
+        .model-card[hidden] { display: none; }
 
         .cert {
             display: inline-block;

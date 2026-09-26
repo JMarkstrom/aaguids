@@ -148,8 +148,61 @@ function updateHeaderIndicators() {
     });
 }
 
+const YUBIKEY_STEMS = new Set([
+    'yubikey-5',
+    'yubikey-5-nano',
+    'yubikey-5-nano-cspn',
+    'yubikey-5-nano-fips',
+    'yubikey-5-nfc',
+    'yubikey-5-nfc-ccn',
+    'yubikey-5-nfc-cspn',
+    'yubikey-5-nfc-epin',
+    'yubikey-5-nfc-fips',
+    'yubikey-5c',
+    'yubikey-5c-cspn',
+    'yubikey-5c-fips',
+    'yubikey-5c-nano',
+    'yubikey-5c-nano-cspn',
+    'yubikey-5c-nano-fips',
+    'yubikey-5c-nfc',
+    'yubikey-5c-nfc-cspn',
+    'yubikey-5c-nfc-epin',
+    'yubikey-5c-nfc-fips',
+    'yubikey-5ci',
+    'yubikey-5ci-cspn',
+    'yubikey-5ci-fips',
+    'yubikey-bio-c-fido-ed',
+    'yubikey-bio-c-mpe',
+    'yubikey-bio-fido-ed',
+    'yubikey-bio-mpe',
+    'yubikey-security-key',
+    'yubikey-security-key-c',
+    'yubikey-security-key-c-enterprise-edition',
+    'yubikey-security-key-enterprise-edition',
+]);
+
+function modelToStem(model) {
+    let value = model.trim();
+    if (/^security key/i.test(value)) {
+        value = 'YubiKey ' + value;
+        value = value.replace(/\s+NFC\b/i, '');
+        value = value.replace(/\bEd\.?$/i, 'Edition');
+    }
+    return value
+        .toLowerCase()
+        .replace(/\./g, '')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+}
+
+function modelImageSrc(model) {
+    const stem = modelToStem(model);
+    return YUBIKEY_STEMS.has(stem) ? 'images/yubikeys/' + stem + '.png' : '';
+}
+
 function renderBody() {
     hideCopyTip();
+    hideModelCard();
     els.tbody.innerHTML = '';
     if (filteredData.length === 0) {
         const tr = document.createElement('tr');
@@ -168,7 +221,11 @@ function renderBody() {
             const td = document.createElement('td');
             const value = safeStr(row[header]);
             td.textContent = value;
-            if (header === 'Model') td.classList.add('model-cell');
+            if (header === 'Model') {
+                td.classList.add('model-cell');
+                const src = modelImageSrc(value);
+                if (src) td.dataset.image = src;
+            }
             if (header === 'Certification') {
                 const level = value.toLowerCase();
                 const tone = level.includes('2') ? 'cert-l2' : level.includes('1') ? 'cert-l1' : '';
@@ -198,8 +255,18 @@ copyTip.className = 'copy-tooltip';
 copyTip.hidden = true;
 document.body.appendChild(copyTip);
 
+const modelCard = document.createElement('figure');
+modelCard.className = 'model-card';
+modelCard.hidden = true;
+const modelImg = document.createElement('img');
+modelImg.alt = '';
+const modelCaption = document.createElement('figcaption');
+modelCard.append(modelImg, modelCaption);
+document.body.appendChild(modelCard);
+
 let tipTarget = null;
 let copiedTimer = null;
+let modelTarget = null;
 
 function copyableFrom(target) {
     if (!(target instanceof Element)) return null;
@@ -234,6 +301,47 @@ function showIdleTip(td) {
     tipTarget = td;
     showCopyTip(td, 'Copy AAGUID');
 }
+
+function modelFrom(target) {
+    if (!(target instanceof Element)) return null;
+    const td = target.closest('.model-cell');
+    return td && td.dataset.image && els.tbody.contains(td) ? td : null;
+}
+
+function positionModelCard(el) {
+    const rect = el.getBoundingClientRect();
+    const cardRect = modelCard.getBoundingClientRect();
+    let left = rect.right + 8;
+    let top = rect.top;
+    if (left + cardRect.width > window.innerWidth - 8) left = rect.left - cardRect.width - 8;
+    if (left < 8) left = 8;
+    if (top < 8) top = 8;
+    const maxTop = window.innerHeight - cardRect.height - 8;
+    if (top > maxTop) top = Math.max(8, maxTop);
+    modelCard.style.left = left + 'px';
+    modelCard.style.top = top + 'px';
+}
+
+function showModelCard(td) {
+    const src = td.dataset.image;
+    if (!src) return;
+    modelTarget = td;
+    modelCaption.textContent = td.textContent;
+    modelImg.alt = td.textContent;
+    modelCard.hidden = false;
+    if (modelImg.getAttribute('src') !== src) modelImg.src = src;
+    positionModelCard(td);
+}
+
+function hideModelCard() {
+    modelCard.hidden = true;
+    modelTarget = null;
+}
+
+modelImg.addEventListener('load', () => {
+    if (modelTarget && !modelCard.hidden) positionModelCard(modelTarget);
+});
+modelImg.addEventListener('error', hideModelCard);
 
 async function copyToClipboard(value, td) {
     try {
@@ -348,8 +456,19 @@ els.tbody.addEventListener('keydown', (e) => {
     e.preventDefault();
     copyToClipboard(td.textContent, td);
 });
+els.tbody.addEventListener('mouseover', (e) => {
+    const td = modelFrom(e.target);
+    if (!td || modelTarget === td) return;
+    showModelCard(td);
+});
+els.tbody.addEventListener('mouseout', (e) => {
+    const td = modelFrom(e.target);
+    if (!td || modelFrom(e.relatedTarget) === td) return;
+    if (modelTarget === td) hideModelCard();
+});
 window.addEventListener('scroll', () => {
     if (tipTarget) positionCopyTip(tipTarget);
+    if (modelTarget) positionModelCard(modelTarget);
 }, true);
 
 els.search.addEventListener('input', debounce(applyFilter, 120));
