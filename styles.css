@@ -223,7 +223,6 @@
     font-size: var(--fs-lg);
     line-height: var(--lh-normal);
     color: var(--hero-fg-muted);
-    max-width: 56ch;
     margin-top: var(--sp-3);
   }
   .hero-stats {
