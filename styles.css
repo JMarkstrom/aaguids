@@ -487,14 +487,20 @@
   #csvTable.table--auto [data-col] { width: auto; }
 
   /* --- Column sizing, by name, never by nth-child -------------------------- */
-  /* Model takes the width AAGUID does not need: a 36-char UUID at 13px mono
-     is ~286px including the copy-glyph gutter, so 37% of a 1120px content
-     column is already generous. The extra room keeps every model name on
-     one line, which is what actually governs row height. */
-  [data-col="model"]         { width: 34%; }
-  [data-col="firmware"]      { width: 11%; }
-  [data-col="aaguid"]        { width: 37%; }
-  [data-col="certification"] { width: 18%; text-align: center; }
+  /* Sized to the typical name, not the longest one. Row-weighted across the 93
+     rows the model name is a 114px median / 153px p90 at 14px Inter 600; only
+     "Security Key NFC Enterprise Ed." (237px, 7 rows) exceeds that, and letting
+     it wrap costs nothing because two 14px lines (39px) still clear the 42px
+     thumbnail that sets the row height. Sizing for that one outlier meant a
+     324px slot holding 114px of text — 210px of dead gutter on the median row.
+
+     Slack has to land somewhere, so it lands where it is least visible: the
+     Certification column, whose badge is centred, splits its leftover evenly on
+     both sides instead of pooling it into one visible gap. */
+  [data-col="model"]         { width: 22%; }
+  [data-col="firmware"]      { width: 12%; }
+  [data-col="aaguid"]        { width: 38%; }
+  [data-col="certification"] { width: 28%; text-align: center; }
 
   /* --- Header cells (stick to the VIEWPORT; no nested scroller) ------------ */
   #csvTable thead th {
@@ -511,16 +517,11 @@
     text-align: left;
     box-shadow: inset 0 -1px 0 var(--border);
   }
-  #csvTable thead th:has(.th-sort) { padding-right: 30px; }
-
   /* The Certification column centres its badges, so its label centres too.
      `#csvTable thead th` (1,0,2) outranks the `[data-col]` width rule (0,1,0),
-     so the alignment has to be restated at this specificity. The sort glyph
-     lives in a 30px right gutter; mirroring it on the left keeps the label
-     centred over the column rather than over the column-minus-gutter. */
+     so the alignment has to be restated at this specificity. */
   #csvTable thead th[data-col="certification"] { text-align: center; }
-  #csvTable thead th[data-col="certification"]:has(.th-sort) { padding-left: 30px; }
-  th[data-col="certification"] .th-sort { text-align: center; }
+  th[data-col="certification"] .th-sort { justify-content: center; }
 
   /* Sentinel-driven lift once the header is pinned. */
   #csvTable.is-stuck thead th {
@@ -529,7 +530,10 @@
       0 6px 12px -8px rgba(0, 0, 0, .25);
   }
   .th-sort {
-    display: block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: var(--sp-2);
     width: 100%;
     padding: 0;
     border: 0;
@@ -542,14 +546,12 @@
     cursor: pointer;
   }
 
-  /* The glyph is positioned against the <th>, which is sticky and therefore
-     already the containing block — that lets it sit in the 30px gutter. */
+  /* The glyph follows the label in normal flow rather than being pinned to the
+     <th>'s right edge. Pinned, it drifted the full width of a wide column away
+     from the word it belongs to, and the dead span between the two read as an
+     empty column. */
   .th-sort::after {
     content: '\21C5';
-    position: absolute;
-    right: var(--sp-3);
-    top: 50%;
-    transform: translateY(-50%);
     font-size: 11px;
     line-height: 1;
     opacity: .35;
@@ -851,10 +853,10 @@
        becoming hard to read, but the model name can — and wrapping it is free,
        because two 14px lines (39px) are still shorter than the 42px thumbnail
        that sets the row height. So give the width to AAGUID. */
-    [data-col="model"]         { width: 26%; }
+    [data-col="model"]         { width: 24%; }
     [data-col="firmware"]      { width: 11%; }
     [data-col="aaguid"]        { width: 45%; }
-    [data-col="certification"] { width: 18%; }
+    [data-col="certification"] { width: 20%; }
 
     /* Safety net below ~800px, where even 45% is narrower than a 36-char
        UUID: let it wrap rather than overflow into the next column. */
