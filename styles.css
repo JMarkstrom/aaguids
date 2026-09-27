@@ -638,23 +638,18 @@
   }
 
   /* --- Certification badges -------------------------------------------------- */
+  /* No leading dot: the tier is already carried by the label text itself
+     ("Level 1" / "Level 2") plus a distinct border colour, so nothing here
+     depends on hue alone and the dot was pure decoration. Padding is
+     symmetric now that there is no glyph to sit closer to the left edge. */
   .cert {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 3px 10px 3px 8px;
+    padding: 3px 10px;
     border-radius: var(--r-full);
     font-size: var(--fs-xs);
     font-weight: 600;
     border: 1px solid;
-  }
-  .cert::before {
-    content: '';
-    width: 6px;
-    height: 6px;
-    border-radius: var(--r-full);
-    background: currentColor;
-    flex: none;
   }
   .cert-l1 {
     color: var(--cert1-fg);
