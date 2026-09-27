@@ -1,380 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Searchable, sortable reference of YubiKey AAGUID values across firmware versions and FIDO2 certification levels.">
-    <meta name="color-scheme" content="light dark">
-    <meta name="referrer" content="no-referrer">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://raw.githubusercontent.com; img-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';">
-    <title>YubiKey AAGUIDs</title>
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"
-            integrity="sha512-dfX5uYVXzyU8+KHqj8bjo7UkOdg18PaOtpa48djpNbZHwExddghZ+ZmzWT06R5v6NSk3ZUfsH6FNEDepLx9hPQ=="
-            crossorigin="anonymous"
-            referrerpolicy="no-referrer"></script>
-    <style>
-        :root {
-            color-scheme: light dark;
-            --yubi-dark: #014421;
-            --yubi-brand: #76B93D;
-
-            --bg: #fafbf9;
-            --surface: #ffffff;
-            --fg: #1a1a1a;
-            --muted: #4d6652;
-            --border: #c8dcc4;
-            --row-stripe: #f5f9f3;
-            --row-hover: #eef8e4;
-
-            --status-bg: #f5f9f0;
-            --status-fg: var(--yubi-dark);
-            --input-bg: #ffffff;
-            --shadow: 0 1px 3px rgba(1, 68, 33, 0.08), 0 4px 12px rgba(1, 68, 33, 0.04);
-        }
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --bg: #0a120c;
-                --surface: #0f1a12;
-                --fg: #e8f0e6;
-                --muted: #8fa896;
-                --border: #1a3d28;
-                --row-stripe: #0c1610;
-                --row-hover: #142818;
-
-                --status-bg: #142818;
-                --status-fg: #b8d4c0;
-                --input-bg: #0c1610;
-                --shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.2);
-            }
-        }
-
-        * { box-sizing: border-box; }
-        html, body {
-            background: var(--bg);
-            color: var(--fg);
-        }
-        body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            margin: 0;
-            padding: 20px 0 32px;
-            line-height: 1.5;
-        }
-
-        .content {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding-left: 20px;
-            padding-right: 20px;
-        }
-
-        .page-header {
-            margin-bottom: 20px;
-        }
-        .page-title {
-            margin: 0;
-            font-size: 1.5rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            color: var(--fg);
-        }
-        .updated {
-            margin: 4px 0 0;
-            font-size: 0.875rem;
-            color: var(--muted);
-        }
-        .updated time { font-variant-numeric: tabular-nums; }
-
-        .card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: var(--shadow);
-        }
-
-        .controls {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 12px;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .search-controls, .export-controls {
-            display: flex;
-            gap: 10px;
-        }
-        input, button {
-            padding: 8px 12px;
-            font: inherit;
-            color: inherit;
-            background: var(--input-bg);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            transition: border-color 120ms ease, box-shadow 120ms ease, background-color 120ms ease;
-        }
-        input[type="search"] {
-            min-width: 200px;
-        }
-        input[type="search"]:focus-visible {
-            outline: none;
-            border-color: var(--yubi-brand);
-            box-shadow: 0 0 0 3px color-mix(in srgb, var(--yubi-brand) 25%, transparent);
-        }
-        button {
-            padding: 8px 16px;
-            cursor: pointer;
-        }
-        button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        button:hover:not(:disabled) {
-            border-color: var(--yubi-brand);
-        }
-        button:focus-visible {
-            outline: 2px solid var(--yubi-brand);
-            outline-offset: 2px;
-        }
-
-        .result-count {
-            color: var(--muted);
-            font-size: 0.8125rem;
-            margin: 0 0 8px;
-            min-height: 1.2em;
-        }
-        .table-status {
-            background: var(--status-bg);
-            color: var(--status-fg);
-            padding: 8px 12px;
-            border-radius: 6px;
-            border: 1px solid var(--border);
-            margin-bottom: 12px;
-            font-size: 0.875rem;
-        }
-
-        .table-container {
-            margin-bottom: 0;
-            border-radius: 6px;
-            overflow: hidden;
-            border: 1px solid var(--border);
-            border-top: 3px solid var(--yubi-brand);
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: fixed;
-        }
-        th, td {
-            border-bottom: 1px solid var(--border);
-            padding: 10px 12px;
-            text-align: left;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        th {
-            background-color: var(--surface);
-            color: var(--fg);
-            cursor: pointer;
-            user-select: none;
-            position: relative;
-            padding-right: 28px;
-            font-weight: 600;
-            font-size: 0.8125rem;
-            letter-spacing: 0;
-            border-bottom: 1px solid var(--border);
-        }
-        th:focus-visible {
-            outline: 2px solid var(--yubi-brand);
-            outline-offset: -3px;
-        }
-        th::after {
-            content: '';
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            opacity: 0.85;
-            font-size: 0.75em;
-        }
-        th.asc::after { content: '\25B2'; }
-        th.desc::after { content: '\25BC'; }
-
-        tbody tr:nth-child(even) td { background-color: var(--row-stripe); }
-        tbody tr:hover td {
-            background-color: var(--row-hover);
-            color: var(--fg);
-        }
-        tbody tr:last-child td { border-bottom: none; }
-
-        /* Column widths: Model / Firmware / AAGUID / Certification */
-        th:nth-child(1), td:nth-child(1) { width: 25%; }
-        th:nth-child(2), td:nth-child(2) { width: 13%; }
-        th:nth-child(3), td:nth-child(3) { width: 45%; }
-        th:nth-child(4), td:nth-child(4) { width: 17%; }
-
-        .monospace { font-family: 'Courier New', Consolas, monospace; }
-        .model-cell { font-weight: 600; }
-        .model-card {
-            position: fixed;
-            z-index: 21;
-            margin: 0;
-            padding: 10px 12px 8px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-            pointer-events: none;
-        }
-        .model-card img {
-            display: block;
-            height: 160px;
-            width: auto;
-            max-width: 140px;
-            object-fit: contain;
-            background: #ffffff;
-            border-radius: 4px;
-        }
-        .model-card figcaption {
-            margin: 0;
-            max-width: 140px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            line-height: 1.3;
-            text-align: center;
-            color: var(--fg);
-        }
-        .model-card[hidden] { display: none; }
-
-        .cert {
-            display: inline-block;
-            padding: 1px 8px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            line-height: 1.5;
-        }
-        .cert-l1 {
-            color: #c92a2a;
-            background: #ffe3e3;
-        }
-        .cert-l2 {
-            color: #76B93D;
-            background: #eef6dc;
-        }
-        @media (prefers-color-scheme: dark) {
-            .cert-l1 {
-                color: #ffc9c9;
-                background: rgba(224, 49, 49, 0.22);
-            }
-            .cert-l2 {
-                color: #76B93D;
-                background: rgba(118, 185, 61, 0.22);
-            }
-        }
-
-        .copyable { cursor: pointer; }
-        .copy-tooltip {
-            position: fixed;
-            z-index: 20;
-            margin: 0;
-            padding: 4px 8px;
-            border-radius: 4px;
-            background: #1a1a1a;
-            color: #ffffff;
-            font-family: 'Inter', system-ui, sans-serif;
-            font-size: 12px;
-            font-weight: 400;
-            line-height: 1.45;
-            white-space: nowrap;
-            pointer-events: none;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-        }
-        @media (prefers-color-scheme: dark) {
-            .copy-tooltip {
-                background: #e8f0e6;
-                color: #0a120c;
-            }
-        }
-
-        .empty-state {
-            text-align: center !important;
-            color: var(--muted);
-            font-style: italic;
-            padding: 32px !important;
-        }
-
-        .disclaimer {
-            margin: 4px 0 0;
-            font-size: 0.875rem;
-            color: var(--muted);
-        }
-
-        .sr-only {
-            position: absolute;
-            width: 1px; height: 1px;
-            padding: 0; margin: -1px;
-            overflow: hidden;
-            clip: rect(0,0,0,0);
-            white-space: nowrap;
-            border: 0;
-        }
-
-        @media (max-width: 768px) {
-            .controls { flex-direction: column; align-items: stretch; }
-            .search-controls, .export-controls { flex-wrap: wrap; }
-            input[type="search"] { min-width: 0; flex: 1; }
-            th, td { min-width: 150px; }
-            .table-container { overflow-x: auto; }
-            .card { padding: 16px; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Searchable, sortable, unofficial reference of YubiKey AAGUID values across firmware versions and FIDO2 certification levels.">
+<meta name="color-scheme" content="light dark">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; img-src 'self' data:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://raw.githubusercontent.com; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none';">
+<title>YubiKey AAGUIDs</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<!-- Anti-FOUC theme bootstrap. MUST remain a classic, synchronous script: `defer`,
+     `async` and `type="module"` are all implicitly deferred until after parsing,
+     which would reintroduce a flash of the wrong theme. -->
+<script src="theme-init.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <main class="content">
-        <header class="page-header">
-            <h1 class="page-title">YubiKey AAGUIDs</h1>
-            <p class="disclaimer">This is not an authoritative source for YubiKey AAGUIDs.</p>
-            <p class="updated">Last updated: <time datetime="2026-09-26">September 26, 2026</time></p>
-        </header>
+<a class="skip-link" href="#data">Skip to table</a>
 
-        <div class="card">
-            <div class="controls">
-                <div class="search-controls">
-                    <label for="search" class="sr-only">Search AAGUIDs</label>
-                    <input type="search" id="search" placeholder="Search..." autocomplete="off" spellcheck="false">
-                    <button type="button" id="clearBtn">Clear</button>
-                </div>
-                <div class="export-controls">
-                    <button type="button" id="exportCsvBtn">Export CSV</button>
-                    <button type="button" id="exportJsonBtn">Export JSON</button>
-                </div>
-            </div>
+<header class="hero">
+  <div class="hero-inner">
+    <div class="theme-switch" role="group" aria-label="Color theme">
+      <button type="button" class="theme-btn" data-theme-choice="light" aria-pressed="false"><svg class="theme-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="3.25"/><path d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3.05 3.05l1.06 1.06M11.89 11.89l1.06 1.06M12.95 3.05l-1.06 1.06M4.11 11.89l-1.06 1.06"/></svg><span class="sr-only">Light</span></button>
+      <button type="button" class="theme-btn" data-theme-choice="dark" aria-pressed="false"><svg class="theme-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M13.5 9.6A5.8 5.8 0 0 1 6.4 2.5a5.75 5.75 0 1 0 7.1 7.1Z"/></svg><span class="sr-only">Dark</span></button>
+      <button type="button" class="theme-btn" data-theme-choice="system" aria-pressed="true"><svg class="theme-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="1.5" y="2.5" width="13" height="9" rx="1.5"/><path d="M5.5 14h5"/></svg><span class="sr-only">System</span></button>
+    </div>
+    <p class="hero-eyebrow"><img class="hero-mark" src="favicon.svg" width="30" height="30" alt="">AAGUID Reference</p>
+    <h1 class="hero-title">YubiKey AAGUIDs</h1>
+    <p class="hero-lede">An unofficial, community-maintained reference of YubiKey AAGUID
+      values across firmware versions and FIDO2 certification levels. Not an authoritative source.</p>
+    <ul class="hero-stats">
+      <li class="pill" id="statRows">93 AAGUIDs</li>
+      <li class="pill" id="statModels">21 models</li>
+      <li class="pill">Updated <time datetime="2026-09-26">26 Sep 2026</time></li>
+    </ul>
+  </div>
+</header>
 
-            <div id="resultCount" class="result-count" aria-live="polite"></div>
-            <div id="tableStatus" class="table-status" role="status" hidden></div>
+<main id="main" class="content">
+  <section class="card card--toolbar">
+    <form class="toolbar-row toolbar-row--search" role="search" id="searchForm">
+      <div class="search-field">
+        <svg class="search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="7" cy="7" r="4.75"/><path d="M10.5 10.5 14 14"/></svg>
+        <label for="search" class="sr-only">Search models, firmware, AAGUIDs</label>
+        <input type="search" id="search" placeholder="Search models, firmware, AAGUIDs…"
+               autocomplete="off" spellcheck="false" aria-describedby="resultCount">
+      </div>
+      <button type="button" id="clearBtn" class="btn" aria-label="Clear search and filters">Clear</button>
+      <div class="export-controls">
+        <button type="button" id="exportCsvBtn" class="btn" aria-describedby="exportNote">Export CSV</button>
+        <button type="button" id="exportJsonBtn" class="btn" aria-describedby="exportNote">Export JSON</button>
+      </div>
+      <span id="exportNote" class="sr-only">Exports the currently filtered rows.</span>
+    </form>
+    <div class="toolbar-row toolbar-row--meta">
+      <div id="certChips" class="chip-group" role="group" aria-label="Filter by certification"></div>
+      <div id="resultCount" class="result-count"></div>
+    </div>
+  </section>
 
-            <div class="table-container">
-                <table id="csvTable">
-                    <caption class="sr-only">YubiKey AAGUID reference table</caption>
-                    <thead></thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-        </div>
-    </main>
+  <section class="card card--table" id="data">
+    <div id="tableStatus" class="table-status" hidden></div>
+    <noscript>
+      <div class="noscript-panel">
+        <p><strong>This page needs JavaScript</strong> to search, sort and render the table.</p>
+        <p>You can still <a href="aaguids.csv" download>download the raw CSV</a>.</p>
+      </div>
+    </noscript>
+    <div class="table-wrap">
+      <div class="table-sentinel" aria-hidden="true"></div>
+      <table id="csvTable">
+        <caption class="sr-only">YubiKey AAGUID reference. Column headers are buttons that
+          sort the table. Select an AAGUID cell to copy it to the clipboard.</caption>
+        <thead></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+</main>
 
-    <div id="a11y-live" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-col footer-col--about">
+      <h2 class="footer-heading">About</h2>
+      <p class="footer-note">YubiKey is a trademark of Yubico. This project is independent of and is not affiliated with, endorsed by, or sponsored by Yubico.</p>
+      <p class="footer-note">This is not an authoritative source for YubiKey AAGUIDs.</p>
+    </div>
+    <nav class="footer-col footer-col--links" aria-label="Resources">
+      <h2 class="footer-heading">Resources</h2>
+      <ul class="footer-links">
+        <li><a href="https://github.com/JMarkstrom/aaguids" rel="noopener noreferrer">GitHub repository</a></li>
+        <li><a href="aaguids.csv" download>Raw CSV data</a></li>
+        <li><a href="https://swjm.blog" rel="noopener noreferrer">swjm.blog</a></li>
+      </ul>
+    </nav>
+    <div class="footer-col footer-col--meta">
+      <h2 class="footer-heading">Legal</h2>
+      <p class="footer-note">© 2026 swjm.blog · All rights reserved</p>
+      <p class="footer-note">Data last updated <time datetime="2026-09-26">26 Sep 2026</time></p>
+    </div>
+  </div>
+</footer>
 
-    <script src="app.js"></script>
+<div id="a11y-live" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+<script src="app.js"></script>
 </body>
 </html>

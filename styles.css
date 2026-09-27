@@ -1,0 +1,1070 @@
+@layer tokens, base, layout, components, utilities;
+
+/* =============================================================================
+   YubiKey AAGUIDs — styles.css
+   No build step. Every colour is themed with light-dark(); there are ZERO
+   prefers-color-scheme blocks. The only !important in this file lives inside
+   the prefers-reduced-motion block at the very bottom.
+   ============================================================================= */
+
+
+/* =============================================================================
+   TOKENS
+   ============================================================================= */
+@layer tokens {
+
+  :root {
+    color-scheme: light dark;
+
+    /* --- Brand ------------------------------------------------------------ */
+    --brand: #76B93D;
+    --brand-ink: light-dark(#2F5D1C, #9ED36A);
+    --brand-deep: #014421;
+
+    /* --- Surfaces --------------------------------------------------------- */
+    --bg: light-dark(#F6F8F4, #0C140F);
+    --surface: light-dark(#FFFFFF, #121C15);
+    --surface-sunken: light-dark(#F1F5EE, #0E170F);
+    --th-bg: light-dark(#F1F5EE, #17231A);
+    --row-stripe: light-dark(#FAFCF8, #101A13);
+    --row-hover: light-dark(#EEF7E3, #18291C);
+    /* Product shots ship with a baked-in white background, so the plate behind
+       them is white in BOTH themes. This is intentional, not an oversight. */
+    --photo-plate: #FFFFFF;
+
+    /* --- Text ------------------------------------------------------------- */
+    --fg: light-dark(#14201A, #E6EFE6);
+    --fg-muted: light-dark(#4A6152, #9AB3A2);
+    --fg-subtle: light-dark(#35513F, #B9CFBF);
+    --fg-on-brand: #FFFFFF;
+
+    /* --- Hero ------------------------------------------------------------- */
+    --hero-bg: linear-gradient(135deg, light-dark(#014421, #04301B), light-dark(#02301A, #021C10));
+    --hero-fg: #FFFFFF;
+    --hero-fg-muted: #B7D9A8;
+    --hero-accent: #9ED36A;
+    --hero-pill-bg: light-dark(#0B4E2A, #0A3F23);
+    --hero-pill-fg: #C9E3BB;
+
+    /* --- Certification badges --------------------------------------------- */
+    --cert1-fg: light-dark(#7A4E00, #F2C97D);
+    --cert1-bg: light-dark(#FFF3D6, #33260C);
+    --cert1-bd: light-dark(#E8CE8F, #4A3814);
+    --cert2-fg: light-dark(#2F5D1C, #A7DD72);
+    --cert2-bg: light-dark(#E9F4DA, #1B3018);
+    --cert2-bd: light-dark(#BEDDA0, #2C4A26);
+
+    /* --- Lines & focus ----------------------------------------------------- */
+    --border: light-dark(#D2E0CB, #23392A);
+    --border-strong: light-dark(#A9C4A1, #365243);
+    --focus-ring: light-dark(#2F5D1C, #9ED36A);
+    --ring: 0 0 0 3px color-mix(in srgb, var(--brand) 32%, transparent);
+
+    /* --- Derived pairs (local to this file; nothing else references them) --- */
+    /* Pressed chip: the fill is --brand-ink in both themes, but --brand-ink is
+       dark green in light mode and light green in dark mode, so the label has
+       to flip too. #FFFFFF on #2F5D1C = 8.6:1; #0C140F on #9ED36A = 11.4:1. */
+    --chip-on-bg: var(--brand-ink);
+    --chip-on-fg: light-dark(#FFFFFF, #0C140F);
+    /* Error strip. Light: #9F1E1E on #FDECEC = 7.0:1.
+                    Dark:  #F5A9A9 on #2A1416 = 9.3:1. Both pass AA (and AAA). */
+    --status-error-bg: light-dark(#FDECEC, #2A1416);
+    --status-error-fg: light-dark(#9F1E1E, #F5A9A9);
+    --status-error-bd: light-dark(#F0C9C9, #4A2124);
+
+    /* --- Spacing ----------------------------------------------------------- */
+    --sp-1: 4px;
+    --sp-2: 8px;
+    --sp-3: 12px;
+    --sp-4: 16px;
+    --sp-5: 20px;
+    --sp-6: 24px;
+    --sp-8: 32px;
+    --sp-10: 40px;
+    --sp-12: 48px;
+    --sp-16: 64px;
+
+    /* --- Radii -------------------------------------------------------------- */
+    --r-xs: 4px;
+    --r-sm: 6px;
+    --r-md: 10px;
+    --r-lg: 14px;
+    --r-full: 999px;
+
+    /* --- Type --------------------------------------------------------------- */
+    --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+    --fs-2xs: 0.6875rem;
+    --fs-xs: 0.75rem;
+    --fs-sm: 0.8125rem;
+    --fs-md: 0.875rem;
+    --fs-lg: 1rem;
+    --fs-xl: 1.25rem;
+    --fs-hero: clamp(1.75rem, 1.2rem + 2.4vw, 2.5rem);
+    --lh-tight: 1.25;
+    --lh-snug: 1.4;
+    --lh-normal: 1.55;
+    --tracking-tight: -0.025em;
+    --tracking-wide: 0.08em;
+    --tracking-eyebrow: 0.14em;
+
+    /* --- Elevation ---------------------------------------------------------- */
+    --shadow-sm:
+      0 1px 2px light-dark(rgba(1, 68, 33, .07), rgba(0, 0, 0, .40));
+    --shadow-lg:
+      0 1px 2px light-dark(rgba(1, 68, 33, .05), rgba(0, 0, 0, .35)),
+      0 12px 28px -12px light-dark(rgba(1, 68, 33, .18), rgba(0, 0, 0, .60));
+    --shadow-xl:
+      0 2px 6px light-dark(rgba(1, 68, 33, .07), rgba(0, 0, 0, .45)),
+      0 24px 48px -16px light-dark(rgba(1, 68, 33, .26), rgba(0, 0, 0, .70));
+
+    /* --- Motion -------------------------------------------------------------- */
+    --dur-fast: 100ms;
+    --dur-base: 160ms;
+    --dur-slow: 240ms;
+    --ease-out: cubic-bezier(.22, 1, .36, 1);
+
+    /* --- Measure -------------------------------------------------------------- */
+    --content-max: 1120px;
+    --gutter: clamp(16px, 4vw, 32px);
+  }
+
+  /* Explicit theme overrides written by theme-init.js / the theme switch. */
+  :root[data-theme="light"] { color-scheme: light; }
+  :root[data-theme="dark"]  { color-scheme: dark; }
+}
+
+
+/* =============================================================================
+   BASE — element resets and global defaults
+   ============================================================================= */
+@layer base {
+
+  *,
+  *::before,
+  *::after { box-sizing: border-box; }
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: var(--sp-16);
+  }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    font-size: var(--fs-lg);
+    line-height: var(--lh-normal);
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, p, figure { margin: 0; }
+  img, svg { display: block; }
+  a { color: var(--brand-ink); }
+  button,
+  input {
+    font: inherit;
+    color: inherit;
+  }
+
+  /* One focus treatment for everything interactive. */
+  :focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+}
+
+
+/* =============================================================================
+   LAYOUT — page shell, hero, footer geometry
+   ============================================================================= */
+@layer layout {
+
+  /* --- Main container ------------------------------------------------------ */
+  .content {
+    max-width: var(--content-max);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  /* --- Hero ---------------------------------------------------------------- */
+  .hero {
+    /* One soft bloom layered over the brand gradient. */
+    background:
+      radial-gradient(circle at 85% -10%, rgba(118, 185, 61, .18), transparent 55%),
+      var(--hero-bg);
+    padding: var(--sp-12) 0 var(--sp-16);
+  }
+  .hero-inner {
+    max-width: var(--content-max);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+    position: relative;
+  }
+  .hero-eyebrow {
+    display: flex;
+    gap: var(--sp-2);
+    align-items: center;
+    font-size: var(--fs-2xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-eyebrow);
+    color: var(--hero-accent);
+  }
+  .hero-mark {
+    width: 30px;
+    height: 30px;
+    flex: none;
+  }
+  .hero-title {
+    font-size: var(--fs-hero);
+    font-weight: 700;
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--lh-tight);
+    color: var(--hero-fg);
+    margin: var(--sp-3) 0 0;
+  }
+  .hero-lede {
+    font-size: var(--fs-lg);
+    line-height: var(--lh-normal);
+    color: var(--hero-fg-muted);
+    max-width: 56ch;
+    margin-top: var(--sp-3);
+  }
+  .hero-stats {
+    list-style: none;
+    margin: var(--sp-5) 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+  }
+  .pill {
+    font-size: var(--fs-2xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    padding: 5px 11px;
+    border-radius: var(--r-full);
+    background: var(--hero-pill-bg);
+    color: var(--hero-pill-fg);
+    border: 1px solid rgba(255, 255, 255, .08);
+  }
+  .pill time { font-variant-numeric: tabular-nums; }
+
+  /* --- Footer -------------------------------------------------------------- */
+  .site-footer {
+    margin-top: var(--sp-12);
+    border-top: 1px solid var(--border);
+    background: var(--surface-sunken);
+    padding: var(--sp-8) 0 var(--sp-10);
+    font-size: var(--fs-sm);
+    color: var(--fg-muted);
+  }
+  .footer-inner {
+    max-width: var(--content-max);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: var(--sp-6);
+  }
+}
+
+
+/* =============================================================================
+   COMPONENTS
+   ============================================================================= */
+@layer components {
+
+  /* ---------------------------------------------------------------------------
+     Theme switch — segmented control pinned to the hero
+     ------------------------------------------------------------------------ */
+  .theme-switch {
+    position: absolute;
+    top: 0;
+    right: var(--gutter);
+    display: inline-flex;
+    gap: 2px;
+    padding: 4px;
+    border-radius: var(--r-full);
+    background: rgba(255, 255, 255, .08);
+    border: 1px solid rgba(255, 255, 255, .08);
+  }
+  .theme-btn {
+    width: 30px;
+    height: 30px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: var(--r-full);
+    background: transparent;
+    color: var(--hero-fg-muted);
+    cursor: pointer;
+    transition:
+      background-color var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out);
+  }
+  .theme-btn[aria-pressed="true"] {
+    background: var(--hero-accent);
+    color: #0C140F;
+  }
+  .theme-btn:focus-visible {
+    outline: 2px solid var(--hero-accent);
+    outline-offset: 2px;
+  }
+  .theme-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* ---------------------------------------------------------------------------
+     Cards
+     ------------------------------------------------------------------------ */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-lg);
+  }
+
+  /* Lifts up over the hero's lower edge. */
+  .card--toolbar {
+    margin-top: -40px;
+    position: relative;
+    z-index: 1;
+    padding: var(--sp-5);
+    border-top: 3px solid var(--brand);
+  }
+
+  /* `overflow: clip` — NOT `hidden`, which would kill the sticky thead. */
+  .card--table {
+    margin-top: var(--sp-4);
+    padding: 0;
+    overflow: clip;
+  }
+
+  /* ---------------------------------------------------------------------------
+     Toolbar — search, buttons, exports
+     ------------------------------------------------------------------------ */
+  .toolbar-row--search {
+    display: flex;
+    gap: var(--sp-3);
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .search-field {
+    flex: 1 1 260px;
+    min-width: 0;
+    position: relative;
+  }
+  .search-icon {
+    position: absolute;
+    left: var(--sp-3);
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    color: var(--fg-muted);
+    pointer-events: none;
+  }
+  .search-field input[type="search"] {
+    width: 100%;
+    height: 40px;
+    padding: 0 var(--sp-3) 0 36px;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--r-sm);
+    background: var(--surface);
+    color: var(--fg);
+    font-size: var(--fs-md);
+    transition:
+      border-color var(--dur-fast) var(--ease-out),
+      box-shadow var(--dur-fast) var(--ease-out);
+  }
+  .search-field input[type="search"]::placeholder { color: var(--fg-muted); }
+  .search-field input[type="search"]:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 1px;
+    border-color: var(--brand);
+    box-shadow: var(--ring);
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    padding: 0 var(--sp-4);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--r-sm);
+    background: var(--surface);
+    color: var(--fg);
+    font-size: var(--fs-md);
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition:
+      border-color var(--dur-fast) var(--ease-out),
+      background-color var(--dur-fast) var(--ease-out);
+  }
+  .btn:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+  }
+  .export-controls {
+    margin-left: auto;
+    display: flex;
+    gap: var(--sp-2);
+  }
+  .toolbar-row--meta {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--sp-3);
+    margin-top: var(--sp-4);
+  }
+  .result-count {
+    font-size: var(--fs-sm);
+    color: var(--fg-muted);
+    font-variant-numeric: tabular-nums;
+    min-height: 1.2em;
+    align-self: center;
+  }
+
+  /* ---------------------------------------------------------------------------
+     Certification filter chips
+     ------------------------------------------------------------------------ */
+  .chip-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    height: 30px;
+    padding: 0 var(--sp-3);
+    border-radius: var(--r-full);
+    border: 1px solid var(--border-strong);
+    background: transparent;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--fg-muted);
+    cursor: pointer;
+    transition:
+      background-color var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out);
+  }
+  .chip-count {
+    margin-left: 6px;
+    color: inherit;
+    opacity: .7;
+    font-variant-numeric: tabular-nums;
+  }
+  .chip[aria-pressed="true"] {
+    background: var(--chip-on-bg);
+    border-color: var(--chip-on-bg);
+    color: var(--chip-on-fg);
+  }
+  .chip[aria-pressed="true"] .chip-count { opacity: .8; }
+
+  /* ---------------------------------------------------------------------------
+     Table shell
+     `border-collapse: collapse` silently drops borders on sticky cells in
+     Chromium/WebKit, so every horizontal rule below is an inset box-shadow.
+     ------------------------------------------------------------------------ */
+  .table-wrap { position: relative; }
+  .table-sentinel {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 1px;
+  }
+  #csvTable {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: fixed;
+  }
+
+  /* Fallback when the CSV headers are not Model/Firmware/AAGUID/Certification. */
+  #csvTable.table--auto { table-layout: auto; }
+  #csvTable.table--auto [data-col] { width: auto; }
+
+  /* --- Column sizing, by name, never by nth-child -------------------------- */
+  [data-col="model"]         { width: 28%; }
+  [data-col="firmware"]      { width: 12%; }
+  [data-col="aaguid"]        { width: 40%; }
+  [data-col="certification"] { width: 20%; text-align: center; }
+
+  /* --- Header cells (stick to the VIEWPORT; no nested scroller) ------------ */
+  #csvTable thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: var(--th-bg);
+    padding: var(--sp-3) var(--sp-4);
+    font-size: var(--fs-2xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    color: var(--fg-subtle);
+    text-align: left;
+    box-shadow: inset 0 -1px 0 var(--border);
+  }
+  #csvTable thead th:has(.th-sort) { padding-right: 30px; }
+
+  /* The Certification column centres its badges, so its label centres too.
+     `#csvTable thead th` (1,0,2) outranks the `[data-col]` width rule (0,1,0),
+     so the alignment has to be restated at this specificity. The sort glyph
+     lives in a 30px right gutter; mirroring it on the left keeps the label
+     centred over the column rather than over the column-minus-gutter. */
+  #csvTable thead th[data-col="certification"] { text-align: center; }
+  #csvTable thead th[data-col="certification"]:has(.th-sort) { padding-left: 30px; }
+  th[data-col="certification"] .th-sort { text-align: center; }
+
+  /* Sentinel-driven lift once the header is pinned. */
+  #csvTable.is-stuck thead th {
+    box-shadow:
+      inset 0 -1px 0 var(--border),
+      0 6px 12px -8px rgba(0, 0, 0, .25);
+  }
+  .th-sort {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  /* The glyph is positioned against the <th>, which is sticky and therefore
+     already the containing block — that lets it sit in the 30px gutter. */
+  .th-sort::after {
+    content: '\21C5';
+    position: absolute;
+    right: var(--sp-3);
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 11px;
+    line-height: 1;
+    opacity: .35;
+  }
+  th.asc .th-sort::after {
+    content: '\25B4';
+    color: var(--brand-ink);
+    opacity: 1;
+  }
+  th.desc .th-sort::after {
+    content: '\25BE';
+    color: var(--brand-ink);
+    opacity: 1;
+  }
+
+  /* --- Body rows ------------------------------------------------------------ */
+  tbody td {
+    padding: 11px var(--sp-4);
+    font-size: var(--fs-md);
+    line-height: var(--lh-snug);
+    vertical-align: middle;
+    text-align: left;
+    box-shadow: inset 0 -1px 0 var(--border);
+  }
+  tbody tr:nth-child(even) td { background: var(--row-stripe); }
+
+  /* --- Cell types ----------------------------------------------------------- */
+  td[data-col="model"] { overflow-wrap: break-word; }
+  .model-cell {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+  }
+  .model-thumb {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    background: var(--photo-plate);
+    border-radius: var(--r-xs);
+    border: 1px solid var(--border);
+    padding: 2px;
+    flex: none;
+  }
+  .model-name {
+    font-weight: 600;
+    overflow-wrap: break-word;
+    min-width: 0;
+  }
+  td[data-col="firmware"] {
+    font-size: var(--fs-sm);
+    color: var(--fg-muted);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  td[data-col="aaguid"] {
+    font-family: var(--font-mono);
+    font-size: var(--fs-sm);
+    letter-spacing: .01em;
+    white-space: nowrap;
+    position: relative;
+    padding-right: 28px;
+  }
+  td[data-col="certification"] { white-space: nowrap; }
+  .copyable { cursor: pointer; }
+
+  /* Copy affordance: a faint ⧉ that firms up to a ✓ on success. */
+  td[data-col="aaguid"]::after {
+    content: '\29C9';
+    position: absolute;
+    right: var(--sp-3);
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--font-sans);
+    opacity: 0;
+    transition: opacity var(--dur-fast) var(--ease-out);
+  }
+  td[data-col="aaguid"]:focus-visible::after { opacity: .55; }
+  td[data-col="aaguid"].is-copied::after {
+    content: '\2713';
+    color: var(--brand-ink);
+    opacity: 1;
+  }
+
+  /* --- Certification badges -------------------------------------------------- */
+  .cert {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px 3px 8px;
+    border-radius: var(--r-full);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    border: 1px solid;
+  }
+  .cert::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: var(--r-full);
+    background: currentColor;
+    flex: none;
+  }
+  .cert-l1 {
+    color: var(--cert1-fg);
+    background: var(--cert1-bg);
+    border-color: var(--cert1-bd);
+  }
+  .cert-l2 {
+    color: var(--cert2-fg);
+    background: var(--cert2-bg);
+    border-color: var(--cert2-bd);
+  }
+
+  /* ---------------------------------------------------------------------------
+     Status strip
+     ------------------------------------------------------------------------ */
+  .table-status {
+    padding: var(--sp-3) var(--sp-4);
+    background: light-dark(#F1F7EA, #16261A);
+    color: var(--brand-ink);
+    box-shadow: inset 0 -1px 0 var(--border);
+    font-size: var(--fs-md);
+  }
+
+  /* Error tint. Light: #9F1E1E on #FDECEC = 7.0:1.
+     Dark:  #F5A9A9 on #2A1416 = 9.3:1. Both clear AA (and AAA) for body text. */
+  .table-status.is-error {
+    background: var(--status-error-bg);
+    color: var(--status-error-fg);
+    box-shadow: inset 0 -1px 0 var(--status-error-bd);
+  }
+
+  /* ---------------------------------------------------------------------------
+     Empty state — beats the base `tbody td` rules on specificity alone
+     (0,1,1 vs 0,0,2) plus layer order. No !important.
+     ------------------------------------------------------------------------ */
+  td.empty-state {
+    text-align: center;
+    padding: var(--sp-12) var(--sp-4);
+    box-shadow: none;
+    background: transparent;
+  }
+  .empty-title {
+    font-size: var(--fs-lg);
+    font-weight: 600;
+  }
+  .empty-hint {
+    font-size: var(--fs-md);
+    color: var(--fg-muted);
+    margin: var(--sp-2) 0 var(--sp-5);
+  }
+
+  /* ---------------------------------------------------------------------------
+     Floaters — copy tooltip and model hover card
+     ------------------------------------------------------------------------ */
+  .copy-tooltip {
+    position: fixed;
+    z-index: 20;
+    margin: 0;
+    padding: 4px 8px;
+    border-radius: var(--r-xs);
+    font-size: var(--fs-xs);
+    background: light-dark(#14201A, #E6EFE6);
+    color: light-dark(#E6EFE6, #14201A);
+    box-shadow: var(--shadow-sm);
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  .model-card {
+    position: fixed;
+    z-index: 21;
+    margin: 0;
+    padding: var(--sp-3);
+    max-width: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--sp-2);
+    border-radius: var(--r-lg);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    box-shadow: var(--shadow-xl);
+    pointer-events: none;
+    animation: floater-in var(--dur-base) var(--ease-out);
+  }
+  .model-card img {
+    height: 150px;
+    width: auto;
+    max-width: 156px;
+    object-fit: contain;
+    background: var(--photo-plate);
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    padding: var(--sp-2);
+  }
+  .model-card figcaption { width: 100%; }
+  .model-card-name {
+    display: block;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    text-align: center;
+    color: var(--fg);
+  }
+  .model-card-meta {
+    display: block;
+    font-size: var(--fs-2xs);
+    color: var(--fg-muted);
+    text-align: center;
+  }
+  .copy-tooltip[hidden],
+  .model-card[hidden] { display: none; }
+
+  @keyframes floater-in {
+    from { opacity: 0; transform: translateY(4px) scale(.98); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  /* ---------------------------------------------------------------------------
+     No-JS panel
+     ------------------------------------------------------------------------ */
+  .noscript-panel {
+    padding: var(--sp-6) var(--sp-4);
+    background: var(--surface-sunken);
+    color: var(--fg);
+    font-size: var(--fs-md);
+    box-shadow: inset 0 -1px 0 var(--border);
+  }
+  .noscript-panel p { margin: 0; }
+  .noscript-panel p + p { margin-top: var(--sp-2); }
+  .noscript-panel strong { font-size: var(--fs-xl); display: block; }
+  .noscript-panel a {
+    color: var(--brand-ink);
+    font-weight: 600;
+  }
+
+  /* ---------------------------------------------------------------------------
+     Skip link
+     ------------------------------------------------------------------------ */
+  .skip-link {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  .skip-link:focus {
+    position: fixed;
+    top: var(--sp-3);
+    left: var(--sp-3);
+    z-index: 50;
+    width: auto;
+    height: auto;
+    margin: 0;
+    padding: 10px var(--sp-4);
+    clip: auto;
+    overflow: visible;
+    border-radius: var(--r-full);
+    background: var(--brand);
+    color: var(--brand-deep);
+    font-size: var(--fs-md);
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: var(--shadow-lg);
+  }
+
+  /* ---------------------------------------------------------------------------
+     Footer contents
+     ------------------------------------------------------------------------ */
+  .footer-col { min-width: 0; }
+
+  /* <h2> reset to a small section label. */
+  .footer-heading {
+    font-size: var(--fs-2xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    color: var(--fg-subtle);
+    margin: 0 0 var(--sp-3);
+  }
+  .footer-note {
+    margin: 0;
+    max-width: 52ch;
+  }
+
+  /* Gap when two notes stack in the same column. */
+  .footer-note + .footer-note { margin-top: var(--sp-3); }
+  .footer-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .footer-links li + li { margin-top: var(--sp-2); }
+  .footer-inner a {
+    color: var(--brand-ink);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+    text-underline-offset: 2px;
+    transition: text-decoration-color var(--dur-fast) var(--ease-out);
+  }
+
+  /* ---------------------------------------------------------------------------
+     Hover-only affordances
+     ------------------------------------------------------------------------ */
+  @media (hover: hover) and (pointer: fine) {
+
+    .btn:hover:not(:disabled) {
+      border-color: var(--brand);
+      background: var(--row-hover);
+    }
+    .chip:hover:not([aria-pressed="true"]) {
+      border-color: var(--brand);
+      color: var(--fg);
+    }
+    .theme-btn:hover:not([aria-pressed="true"]) {
+      background: rgba(255, 255, 255, .12);
+      color: var(--hero-fg);
+    }
+    .th-sort:hover { color: var(--brand-ink); }
+    #csvTable tbody tr:hover td:not(.empty-state) { background: var(--row-hover); }
+
+    /* The 2px brand edge is composed INTO the cell's inset shadow so the
+       row's bottom rule survives. */
+    #csvTable tbody tr:hover td:not(.empty-state):first-child {
+      box-shadow:
+        inset 2px 0 0 0 var(--brand),
+        inset 0 -1px 0 var(--border);
+    }
+    #csvTable tbody tr:hover td[data-col="aaguid"]::after { opacity: .55; }
+    .footer-inner a:hover { text-decoration-color: currentColor; }
+  }
+
+  /* ---------------------------------------------------------------------------
+     Breakpoint: 1024px — tighten the hero, give the table room
+     ------------------------------------------------------------------------ */
+  @media (max-width: 1024px) {
+
+    .hero { padding: var(--sp-10) 0 var(--sp-16); }
+    [data-col="model"]         { width: 30%; }
+    [data-col="firmware"]      { width: 14%; }
+    [data-col="aaguid"]        { width: 38%; }
+    [data-col="certification"] { width: 18%; }
+  }
+
+  /* ---------------------------------------------------------------------------
+     Breakpoint: 768px — single-column footer, roomier toolbar
+     ------------------------------------------------------------------------ */
+  @media (max-width: 768px) {
+
+    .footer-inner { grid-template-columns: 1fr; }
+    .card--toolbar { padding: var(--sp-4); }
+    .search-field { flex: 1 1 100%; }
+    .export-controls { margin-left: 0; }
+    .toolbar-row--meta { align-items: flex-start; }
+  }
+
+  /* ---------------------------------------------------------------------------
+     Breakpoint: 700px — the table becomes a stacked card list.
+     thead is visually hidden but stays in the accessibility tree
+     (position: absolute, NOT display: none). No horizontal scroll.
+     ------------------------------------------------------------------------ */
+  @media (max-width: 700px) {
+
+    .card--table {
+      border: 0;
+      background: transparent;
+      box-shadow: none;
+      padding: 0;
+      margin-top: var(--sp-5);
+    }
+    .table-status,
+    .noscript-panel {
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      margin-bottom: var(--sp-3);
+      box-shadow: none;
+    }
+    #csvTable thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    #csvTable,
+    #csvTable tbody,
+    #csvTable tr,
+    #csvTable td { display: block; }
+
+    /* Percentage widths and nowrap make no sense once cells are blocks. */
+    #csvTable [data-col] {
+      width: auto;
+      white-space: normal;
+    }
+    #csvTable tbody tr {
+      margin-bottom: var(--sp-3);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      background: var(--surface);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Zebra striping off in card mode. */
+    #csvTable tbody tr:nth-child(even) td { background: transparent; }
+    #csvTable tbody td {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--sp-4);
+      padding: 10px var(--sp-4);
+      text-align: right;
+      box-shadow: inset 0 -1px 0 var(--border);
+    }
+    #csvTable tbody tr td:last-child { box-shadow: none; }
+    #csvTable tbody td::before {
+      content: attr(data-label);
+      font-weight: 600;
+      color: var(--fg-subtle);
+      font-size: var(--fs-2xs);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+      text-align: left;
+      flex: none;
+    }
+
+    /* Model keeps its thumbnail and reads as the card's title. */
+    #csvTable tbody td.model-cell {
+      justify-content: flex-start;
+      text-align: left;
+      background: var(--surface-sunken);
+      padding: var(--sp-3) var(--sp-4);
+      font-size: var(--fs-lg);
+    }
+    #csvTable tbody td.model-cell::before { content: none; }
+
+    /* Let the copy glyph flow as a flex item instead of overlapping the value. */
+    #csvTable tbody td[data-col="aaguid"] {
+      padding-right: var(--sp-4);
+      overflow-wrap: anywhere;
+    }
+    #csvTable tbody td[data-col="aaguid"]::after {
+      position: static;
+      transform: none;
+      flex: none;
+    }
+
+    /* The empty state still spans the whole card list. */
+    #csvTable tbody tr:has(td.empty-state) {
+      border: 0;
+      background: transparent;
+      box-shadow: none;
+      margin: 0;
+    }
+    #csvTable tbody td.empty-state {
+      display: block;
+      text-align: center;
+      padding: var(--sp-10) var(--sp-4);
+    }
+    #csvTable tbody td.empty-state::before { content: none; }
+  }
+
+  /* ---------------------------------------------------------------------------
+     Breakpoint: 520px — theme switch drops into the flow
+     ------------------------------------------------------------------------ */
+  @media (max-width: 520px) {
+
+    .theme-switch {
+      position: static;
+      margin-bottom: var(--sp-4);
+      width: max-content;
+    }
+    .hero { padding: var(--sp-8) 0 var(--sp-16); }
+    .toolbar-row--search { gap: var(--sp-2); }
+    .toolbar-row--search > .btn,
+    .export-controls { flex: 1 1 100%; }
+    .export-controls > .btn { flex: 1 1 0; }
+  }
+}
+
+
+/* =============================================================================
+   UTILITIES
+   ============================================================================= */
+@layer utilities {
+
+  /* Same clip pattern the page shipped with. */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  [hidden] { display: none; }
+
+  /* The only !important in the file, as mandated. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
