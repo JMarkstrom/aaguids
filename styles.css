@@ -28,9 +28,6 @@
     --th-bg: light-dark(#F1F5EE, #17231A);
     --row-stripe: light-dark(#FAFCF8, #101A13);
     --row-hover: light-dark(#EEF7E3, #18291C);
-    /* Product shots ship with a baked-in white background, so the plate behind
-       them is white in BOTH themes. This is intentional, not an oversight. */
-    --photo-plate: #FFFFFF;
 
     /* --- Text ------------------------------------------------------------- */
     --fg: light-dark(#14201A, #E6EFE6);
@@ -490,10 +487,14 @@
   #csvTable.table--auto [data-col] { width: auto; }
 
   /* --- Column sizing, by name, never by nth-child -------------------------- */
-  [data-col="model"]         { width: 28%; }
-  [data-col="firmware"]      { width: 12%; }
-  [data-col="aaguid"]        { width: 40%; }
-  [data-col="certification"] { width: 20%; text-align: center; }
+  /* Model takes the width AAGUID does not need: a 36-char UUID at 13px mono
+     is ~286px including the copy-glyph gutter, so 37% of a 1120px content
+     column is already generous. The extra room keeps every model name on
+     one line, which is what actually governs row height. */
+  [data-col="model"]         { width: 34%; }
+  [data-col="firmware"]      { width: 11%; }
+  [data-col="aaguid"]        { width: 37%; }
+  [data-col="certification"] { width: 18%; text-align: center; }
 
   /* --- Header cells (stick to the VIEWPORT; no nested scroller) ------------ */
   #csvTable thead th {
@@ -566,7 +567,9 @@
 
   /* --- Body rows ------------------------------------------------------------ */
   tbody td {
-    padding: 11px var(--sp-4);
+    /* Vertical padding is deliberately small: the 42px thumbnail already
+       sets the row height, so anything more just makes rows tall. */
+    padding: 5px var(--sp-4);
     font-size: var(--fs-md);
     line-height: var(--lh-snug);
     vertical-align: middle;
@@ -580,16 +583,16 @@
   .model-cell {
     display: flex;
     align-items: center;
-    gap: var(--sp-3);
+    gap: var(--sp-2);
   }
+  /* Unframed: every product shot is a 80x200 PNG with a transparent
+     background, so it sits directly on the row in both themes. The box
+     matches that 2:5 aspect ratio rather than being square — a square box
+     letterboxed the key down to an 11px sliver and wasted 60% of its width. */
   .model-thumb {
-    width: 28px;
-    height: 28px;
+    width: 17px;
+    height: 42px;
     object-fit: contain;
-    background: var(--photo-plate);
-    border-radius: var(--r-xs);
-    border: 1px solid var(--border);
-    padding: 2px;
     flex: none;
   }
   .model-name {
@@ -717,54 +720,7 @@
     pointer-events: none;
     white-space: nowrap;
   }
-  .model-card {
-    position: fixed;
-    z-index: 21;
-    margin: 0;
-    padding: var(--sp-3);
-    max-width: 200px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--sp-2);
-    border-radius: var(--r-lg);
-    border: 1px solid var(--border);
-    background: var(--surface);
-    box-shadow: var(--shadow-xl);
-    pointer-events: none;
-    animation: floater-in var(--dur-base) var(--ease-out);
-  }
-  .model-card img {
-    height: 150px;
-    width: auto;
-    max-width: 156px;
-    object-fit: contain;
-    background: var(--photo-plate);
-    border: 1px solid var(--border);
-    border-radius: var(--r-md);
-    padding: var(--sp-2);
-  }
-  .model-card figcaption { width: 100%; }
-  .model-card-name {
-    display: block;
-    font-size: var(--fs-sm);
-    font-weight: 600;
-    text-align: center;
-    color: var(--fg);
-  }
-  .model-card-meta {
-    display: block;
-    font-size: var(--fs-2xs);
-    color: var(--fg-muted);
-    text-align: center;
-  }
-  .copy-tooltip[hidden],
-  .model-card[hidden] { display: none; }
-
-  @keyframes floater-in {
-    from { opacity: 0; transform: translateY(4px) scale(.98); }
-    to   { opacity: 1; transform: none; }
-  }
+  .copy-tooltip[hidden] { display: none; }
 
   /* ---------------------------------------------------------------------------
      No-JS panel
@@ -890,10 +846,22 @@
   @media (max-width: 1024px) {
 
     .hero { padding: var(--sp-10) 0 var(--sp-16); }
-    [data-col="model"]         { width: 30%; }
-    [data-col="firmware"]      { width: 14%; }
-    [data-col="aaguid"]        { width: 38%; }
+
+    /* Priority inverts as the table narrows: the AAGUID cannot wrap without
+       becoming hard to read, but the model name can — and wrapping it is free,
+       because two 14px lines (39px) are still shorter than the 42px thumbnail
+       that sets the row height. So give the width to AAGUID. */
+    [data-col="model"]         { width: 26%; }
+    [data-col="firmware"]      { width: 11%; }
+    [data-col="aaguid"]        { width: 45%; }
     [data-col="certification"] { width: 18%; }
+
+    /* Safety net below ~800px, where even 45% is narrower than a 36-char
+       UUID: let it wrap rather than overflow into the next column. */
+    td[data-col="aaguid"] {
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
   }
 
   /* ---------------------------------------------------------------------------

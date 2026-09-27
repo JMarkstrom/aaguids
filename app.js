@@ -333,8 +333,10 @@ const CELL_RENDERERS = {
             img.className = 'model-thumb';
             img.src = src;
             img.alt = '';
-            img.width = 28;
-            img.height = 28;
+            // Every product shot is 80x200, so the box matches that aspect
+            // ratio: a square box letterboxed the key down to an 11px sliver.
+            img.width = 17;
+            img.height = 42;
             img.loading = 'lazy';
             img.decoding = 'async';
             td.appendChild(img);
@@ -396,7 +398,6 @@ function renderEmptyState() {
 
 function renderBody() {
     hideCopyTip();
-    hideModelCard();
     if (!els.tbody) return;
     els.tbody.innerHTML = '';
 
@@ -405,16 +406,10 @@ function renderBody() {
         return;
     }
 
-    const firmwareHeader = headerBySlug('firmware');
-    const certHeader = headerBySlug('certification');
     const frag = document.createDocumentFragment();
 
     state.filtered.forEach((row) => {
         const tr = document.createElement('tr');
-        // The preview card reads these for its meta line.
-        if (firmwareHeader) tr.dataset.firmware = safeStr(row[firmwareHeader]);
-        if (certHeader) tr.dataset.cert = safeStr(row[certHeader]);
-
         state.headers.forEach((header) => {
             const slug = slugify(header);
             const value = safeStr(row[header]);
@@ -466,27 +461,9 @@ copyTip.className = 'copy-tooltip';
 copyTip.hidden = true;
 document.body.appendChild(copyTip);
 
-const modelCard = document.createElement('figure');
-modelCard.className = 'model-card';
-modelCard.hidden = true;
-modelCard.setAttribute('aria-hidden', 'true');
-const modelImg = document.createElement('img');
-modelImg.alt = ''; // always empty: the caption already names the model
-modelImg.width = 150;
-modelImg.height = 150;
-const modelCaption = document.createElement('figcaption');
-const modelCardName = document.createElement('span');
-modelCardName.className = 'model-card-name';
-const modelCardMeta = document.createElement('span');
-modelCardMeta.className = 'model-card-meta';
-modelCaption.append(modelCardName, modelCardMeta);
-modelCard.append(modelImg, modelCaption);
-document.body.appendChild(modelCard);
-
 let tipTarget = null;
 let copiedTimer = null;
 let copiedCell = null;
-let modelTarget = null;
 let floaterFrame = 0;
 
 function copyableFrom(target) {
@@ -495,14 +472,8 @@ function copyableFrom(target) {
     return td && els.tbody && els.tbody.contains(td) ? td : null;
 }
 
-function modelFrom(target) {
-    if (!(target instanceof Element)) return null;
-    const td = target.closest('.model-cell');
-    return td && td.dataset.image && els.tbody && els.tbody.contains(td) ? td : null;
-}
-
-// One positioner for both floaters. `side` is the preferred placement
-// ('above' or 'right'); both fall back and clamp inside the viewport.
+// Positions the copy tooltip: `side` is the preferred placement, which
+// falls back and clamps inside the viewport.
 function positionFloater(floater, anchor, opts) {
     const options = opts || {};
     const gap = typeof options.gap === 'number' ? options.gap : 8;
@@ -548,41 +519,15 @@ function showIdleTip(td) {
     showCopyTip(td, 'Copy AAGUID');
 }
 
-function showModelCard(td) {
-    const src = td.dataset.image;
-    if (!src) return;
-    modelTarget = td;
-    modelCardName.textContent = td.dataset.model || '';
-    const tr = td.closest('tr');
-    const firmware = tr ? safeStr(tr.dataset.firmware) : '';
-    const cert = tr ? safeStr(tr.dataset.cert) : '';
-    const meta = [firmware ? 'Firmware ' + firmware : '', cert].filter(Boolean).join(' · ');
-    modelCardMeta.textContent = meta;
-    modelCard.hidden = false;
-    if (modelImg.getAttribute('src') !== src) modelImg.src = src;
-    positionFloater(modelCard, td, { side: 'right', gap: 8 });
-}
-
-function hideModelCard() {
-    modelCard.hidden = true;
-    modelTarget = null;
-}
-
 function repositionFloaters() {
     floaterFrame = 0;
     if (tipTarget) positionFloater(copyTip, tipTarget, { side: 'above', gap: 6 });
-    if (modelTarget) positionFloater(modelCard, modelTarget, { side: 'right', gap: 8 });
 }
 
 function scheduleReposition() {
     if (floaterFrame) return;
     floaterFrame = requestAnimationFrame(repositionFloaters);
 }
-
-modelImg.addEventListener('load', () => {
-    if (modelTarget && !modelCard.hidden) positionFloater(modelCard, modelTarget, { side: 'right', gap: 8 });
-});
-modelImg.addEventListener('error', hideModelCard);
 
 // Clipboard write with a plain-HTTP fallback (navigator.clipboard is
 // undefined on insecure origins, e.g. LAN dev over http://).
@@ -646,24 +591,6 @@ function initOverlays() {
             if (!td || copyableFrom(e.relatedTarget) === td) return;
             if (tipTarget === td) hideCopyTip();
         });
-        els.tbody.addEventListener('mouseover', (e) => {
-            const td = modelFrom(e.target);
-            if (!td || modelTarget === td) return;
-            showModelCard(td);
-        });
-        els.tbody.addEventListener('mouseout', (e) => {
-            const td = modelFrom(e.target);
-            if (!td || modelFrom(e.relatedTarget) === td) return;
-            if (modelTarget === td) hideModelCard();
-        });
-    } else {
-        // Touch/coarse pointers: tap a model cell to toggle the preview,
-        // tap anywhere else to dismiss it.
-        document.addEventListener('pointerdown', (e) => {
-            if (modelFrom(e.target)) return;
-            if (e.target instanceof Node && modelCard.contains(e.target)) return;
-            hideModelCard();
-        });
     }
 
     els.tbody.addEventListener('focusin', (e) => {
@@ -674,32 +601,13 @@ function initOverlays() {
         const td = copyableFrom(e.target);
         if (td && tipTarget === td) hideCopyTip();
     });
-    els.tbody.addEventListener('focusin', (e) => {
-        const td = modelFrom(e.target);
-        if (td && modelTarget !== td) showModelCard(td);
-    });
-    els.tbody.addEventListener('focusout', (e) => {
-        const td = modelFrom(e.target);
-        if (td && modelTarget === td) hideModelCard();
-    });
-
     els.tbody.addEventListener('click', (e) => {
         if (e.target instanceof Element && e.target.closest('.empty-clear')) {
             clearFilter();
             return;
         }
         const copyTd = copyableFrom(e.target);
-        if (copyTd) {
-            copyToClipboard(copyTd.textContent, copyTd);
-            return;
-        }
-        if (!canHover) {
-            const modelTd = modelFrom(e.target);
-            if (modelTd) {
-                if (modelTarget === modelTd) hideModelCard();
-                else showModelCard(modelTd);
-            }
-        }
+        if (copyTd) copyToClipboard(copyTd.textContent, copyTd);
     });
 
     els.tbody.addEventListener('keydown', (e) => {
@@ -713,7 +621,6 @@ function initOverlays() {
     document.addEventListener('keydown', (e) => {
         if (e.key !== 'Escape') return;
         hideCopyTip();
-        hideModelCard();
     });
 
     window.addEventListener('scroll', scheduleReposition, { capture: true, passive: true });
