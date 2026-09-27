@@ -206,11 +206,6 @@
     letter-spacing: var(--tracking-eyebrow);
     color: var(--hero-accent);
   }
-  .hero-mark {
-    width: 30px;
-    height: 30px;
-    flex: none;
-  }
   .hero-title {
     font-size: var(--fs-hero);
     font-weight: 700;
