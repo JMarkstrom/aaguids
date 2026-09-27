@@ -582,10 +582,15 @@
 
   /* --- Cell types ----------------------------------------------------------- */
   td[data-col="model"] { overflow-wrap: break-word; }
-  .model-cell {
+  /* The flex row lives inside the cell. display:flex on the td itself takes
+     it out of table layout, so the cell shrinks to the thumbnail and the name
+     wraps one letter per line. */
+  .model-layout {
     display: flex;
     align-items: center;
     gap: var(--sp-2);
+    width: 100%;
+    min-width: 0;
   }
   /* Unframed: every product shot is a 80x200 PNG with a transparent
      background, so it sits directly on the row in both themes. The box

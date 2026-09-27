@@ -326,6 +326,8 @@ const CELL_RENDERERS = {
     model(td, value) {
         td.classList.add('model-cell');
         td.dataset.model = value;
+        const layout = document.createElement('span');
+        layout.className = 'model-layout';
         const src = modelImageSrc(value);
         if (src) {
             td.dataset.image = src;
@@ -339,12 +341,13 @@ const CELL_RENDERERS = {
             img.height = 42;
             img.loading = 'lazy';
             img.decoding = 'async';
-            td.appendChild(img);
+            layout.appendChild(img);
         }
         const name = document.createElement('span');
         name.className = 'model-name';
         name.textContent = value;
-        td.appendChild(name);
+        layout.appendChild(name);
+        td.appendChild(layout);
     },
 
     firmware: renderDefaultCell,
