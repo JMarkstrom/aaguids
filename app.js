@@ -308,7 +308,30 @@ function modelToStem(model) {
         .replace(/^-+|-+$/g, '');
 }
 
-function modelImageSrc(model) {
+function firmwareTokens(firmware) {
+    return safeStr(firmware).split('/').map((part) => part.trim()).filter(Boolean);
+}
+
+// Blue Security Key photos apply only to specific firmware rows.
+function securityKeyImage(model, firmware) {
+    const name = model.trim().toLowerCase();
+    const versions = firmwareTokens(firmware);
+    const has = (version) => versions.includes(version);
+    if (name === 'security key' && (has('5.1') || has('5.2'))) {
+        return 'images/yubikeys/yubikey-security-key-a-blue-no-nfc.png';
+    }
+    if (name === 'security key nfc' && (has('5.1') || has('5.2'))) {
+        return 'images/yubikeys/yubikey-security-key-a-blue-nfc.png';
+    }
+    if (name === 'security key c nfc' && has('5.2')) {
+        return 'images/yubikeys/yubikey-security-key-c-blue-nfc.png';
+    }
+    return '';
+}
+
+function modelImageSrc(model, firmware) {
+    const override = securityKeyImage(model, firmware);
+    if (override) return override;
     const stem = modelToStem(model);
     return YUBIKEY_STEMS.has(stem) ? 'images/yubikeys/' + stem + '.png' : '';
 }
@@ -323,12 +346,12 @@ function renderDefaultCell(td, value) {
 
 // Keyed by column slug. Signature: (td, value, row) => void.
 const CELL_RENDERERS = {
-    model(td, value) {
+    model(td, value, row) {
         td.classList.add('model-cell');
         td.dataset.model = value;
         const layout = document.createElement('span');
         layout.className = 'model-layout';
-        const src = modelImageSrc(value);
+        const src = modelImageSrc(value, row && row.Firmware);
         if (src) {
             td.dataset.image = src;
             const img = document.createElement('img');
