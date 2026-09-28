@@ -6,34 +6,32 @@
 <meta name="description" content="Searchable, sortable, unofficial reference of YubiKey AAGUID values across firmware versions and FIDO2 certification levels.">
 <meta name="color-scheme" content="light dark">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; img-src 'self' data:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://raw.githubusercontent.com; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://raw.githubusercontent.com; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none';">
 <title>YubiKey AAGUIDs</title>
 <!-- Anti-FOUC theme bootstrap. MUST remain a classic, synchronous script: `defer`,
      `async` and `type="module"` are all implicitly deferred until after parsing,
      which would reintroduce a flash of the wrong theme. -->
 <script src="theme-init.js"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <a class="skip-link" href="#data">Skip to table</a>
 
-<header class="hero">
-  <div class="hero-inner">
-    <div class="theme-switch" role="group" aria-label="Color theme">
-      <button type="button" class="theme-btn" data-theme-choice="light" aria-pressed="false"><svg class="theme-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="3.25"/><path d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3.05 3.05l1.06 1.06M11.89 11.89l1.06 1.06M12.95 3.05l-1.06 1.06M4.11 11.89l-1.06 1.06"/></svg><span class="sr-only">Light</span></button>
-      <button type="button" class="theme-btn" data-theme-choice="dark" aria-pressed="false"><svg class="theme-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M13.5 9.6A5.8 5.8 0 0 1 6.4 2.5a5.75 5.75 0 1 0 7.1 7.1Z"/></svg><span class="sr-only">Dark</span></button>
-      <button type="button" class="theme-btn" data-theme-choice="system" aria-pressed="true"><svg class="theme-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="1.5" y="2.5" width="13" height="9" rx="1.5"/><path d="M5.5 14h5"/></svg><span class="sr-only">System</span></button>
+<header class="masthead">
+  <div class="masthead-inner">
+    <div class="masthead-bar">
+      <h1 class="masthead-title">YubiKey AAGUIDs</h1>
+      <div class="theme-switch" role="group" aria-label="Color theme">
+        <button type="button" class="theme-btn" data-theme-choice="light" aria-pressed="false"><svg class="theme-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="3.25"/><path d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3.05 3.05l1.06 1.06M11.89 11.89l1.06 1.06M12.95 3.05l-1.06 1.06M4.11 11.89l-1.06 1.06"/></svg><span class="sr-only">Light</span></button>
+        <button type="button" class="theme-btn" data-theme-choice="dark" aria-pressed="false"><svg class="theme-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M13.5 9.6A5.8 5.8 0 0 1 6.4 2.5a5.75 5.75 0 1 0 7.1 7.1Z"/></svg><span class="sr-only">Dark</span></button>
+        <button type="button" class="theme-btn" data-theme-choice="system" aria-pressed="true"><svg class="theme-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="1.5" y="2.5" width="13" height="9" rx="1.5"/><path d="M5.5 14h5"/></svg><span class="sr-only">System</span></button>
+      </div>
     </div>
-    <p class="hero-eyebrow">AAGUID Reference</p>
-    <h1 class="hero-title">YubiKey AAGUIDs</h1>
-    <p class="hero-lede">AAGUIDs provide an actionable way to distinguish between security key makes and models, for example enabling organizations to whitelist approved models in their identity provider. This listing extends the official Yubico AAGUID listing with product images, copy-to-clipboard for AAGUID values, and export to CSV or JSON based on user selection.</p>
-    <ul class="hero-stats">
-      <li class="pill" id="statRows">93 AAGUIDs</li>
-      <li class="pill" id="statModels">21 models</li>
-      <li class="pill">Updated <time datetime="2026-09-28">28 Sep 2026</time></li>
+    <p class="masthead-lede">AAGUIDs provide an actionable way to distinguish between security key makes and models, for example enabling organizations to whitelist approved models in their identity provider. This listing extends the official Yubico AAGUID listing with product images, copy-to-clipboard for AAGUID values, and export to CSV or JSON based on user selection.</p>
+    <ul class="masthead-meta">
+      <li id="statRows">109 AAGUIDs</li>
+      <li id="statModels">22 models</li>
+      <li class="meta-updated">Updated <time id="statUpdated" datetime="2026-09-28">28 Sep 2026</time></li>
     </ul>
   </div>
 </header>

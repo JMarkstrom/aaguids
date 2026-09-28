@@ -52,6 +52,7 @@ const els = {
     themeSwitch: document.querySelector('.theme-switch'),
     statRows: document.getElementById('statRows'),
     statModels: document.getElementById('statModels'),
+    statUpdated: document.getElementById('statUpdated'),
 };
 
 /* ------------------------------------------------------------------ *
@@ -468,6 +469,49 @@ function renderStats() {
     }
 }
 
+/*
+ * "Updated 28 Sep 2026" asks the reader to work out how stale the data is
+ * against today's date. A relative phrase answers that directly, which is the
+ * whole reason this item is emphasised over the other two stats.
+ *
+ * Returns null — meaning "keep the absolute date already in the markup" —
+ * for anything it cannot phrase well: a malformed datetime, a future date
+ * (the markup is wrong and "in 2 days" would be nonsense), anything older
+ * than ~3 months (where "13 weeks ago" is less use than the date itself),
+ * and engines without Intl.RelativeTimeFormat.
+ */
+function relativeDay(iso) {
+    if (typeof Intl === 'undefined' || typeof Intl.RelativeTimeFormat !== 'function') return null;
+    const parts = /^(\d{4})-(\d{2})-(\d{2})$/.exec(safeStr(iso));
+    if (!parts) return null;
+
+    /* Both sides are built at LOCAL midnight. `new Date('2026-09-28')` would
+       parse as UTC midnight, which lands on the previous day for anyone west
+       of Greenwich and reports an off-by-one "yesterday". */
+    const then = new Date(+parts[1], +parts[2] - 1, +parts[3]);
+    if (Number.isNaN(then.getTime())) return null;
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const days = Math.round((today - then) / 86400000);
+    if (days < 0 || days >= 90) return null;
+
+    // numeric: 'auto' is what yields "today" / "yesterday" / "last week"
+    // instead of "0 days ago" / "1 day ago" / "1 week ago".
+    const rtf = new Intl.RelativeTimeFormat(undefined, { numeric: 'auto' });
+    return days < 7 ? rtf.format(-days, 'day') : rtf.format(-Math.round(days / 7), 'week');
+}
+
+function renderUpdated() {
+    if (!els.statUpdated) return;
+    const absolute = safeStr(els.statUpdated.textContent);
+    const relative = relativeDay(els.statUpdated.getAttribute('datetime'));
+    if (!relative) return;
+    // The exact date stays reachable on hover, machine-readable in `datetime`,
+    // and spelled out in full in the footer.
+    els.statUpdated.title = absolute;
+    els.statUpdated.textContent = relative;
+}
+
 function initStickyShadow() {
     if (!els.sentinel || !els.table || typeof IntersectionObserver !== 'function') return;
     const io = new IntersectionObserver((entries) => {
@@ -882,6 +926,9 @@ function initControls() {
 initThemeToggle();
 initControls();
 initOverlays();
+// Not inside the loadData() chain: the date comes from the markup, not the CSV,
+// so it should still resolve when the fetch fails.
+renderUpdated();
 
 loadData().then(() => {
     buildHeader();

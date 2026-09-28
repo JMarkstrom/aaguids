@@ -2,6 +2,13 @@
 
 /* =============================================================================
    YubiKey AAGUIDs — styles.css
+
+   Design intent: an independent technical reference, not a product page. The
+   palette is a cool neutral carrying a single indigo accent, and the accent is
+   reserved for interactive state (focus, active sort, pressed filter, links).
+   Nothing is tinted just to be tinted — this is deliberate, so the page is not
+   mistaken for official Yubico material.
+
    No build step. Every colour is themed with light-dark(); there are ZERO
    prefers-color-scheme blocks. The only !important in this file lives inside
    the prefers-reduced-motion block at the very bottom.
@@ -16,34 +23,41 @@
   :root {
     color-scheme: light dark;
 
-    /* --- Brand ------------------------------------------------------------ */
-    --brand: #76B93D;
-    --brand-ink: light-dark(#2F5D1C, #9ED36A);
-    --brand-deep: #014421;
+    /* --- Accent ------------------------------------------------------------
+       One hue, used only where something is interactive or active. Both ends
+       clear AA against every surface they land on:
+         #4A45C8 on #FFFFFF = 7.1:1   #A9A4FF on #151A21 = 7.9:1
+         #4A45C8 on #F7F8FA = 6.6:1   #A9A4FF on #0F1217 = 8.4:1            */
+    --accent: light-dark(#4A45C8, #A9A4FF);
+    --accent-solid: #4A45C8;
+    --accent-on: light-dark(#FFFFFF, #0F1217);
 
     /* --- Surfaces --------------------------------------------------------- */
-    --bg: light-dark(#F6F8F4, #0C140F);
-    --surface: light-dark(#FFFFFF, #121C15);
-    --surface-sunken: light-dark(#F1F5EE, #0E170F);
-    --th-bg: light-dark(#F1F5EE, #17231A);
-    --row-stripe: light-dark(#FAFCF8, #101A13);
-    --row-hover: light-dark(#EEF7E3, #18291C);
+    --bg: light-dark(#F7F8FA, #0F1217);
+    --surface: light-dark(#FFFFFF, #151A21);
+    --surface-sunken: light-dark(#F1F3F6, #12161C);
+    --th-bg: light-dark(#F1F3F6, #1A202A);
+    --row-stripe: light-dark(#FAFBFC, #12171E);
+    --row-hover: light-dark(#EEF1F7, #1D2430);
 
-    /* --- Text ------------------------------------------------------------- */
-    --fg: light-dark(#14201A, #E6EFE6);
-    --fg-muted: light-dark(#4A6152, #9AB3A2);
-    --fg-subtle: light-dark(#35513F, #B9CFBF);
-    --fg-on-brand: #FFFFFF;
+    /* --- Text ---------------------------------------------------------------
+       muted is the weakest token in the file and still clears AA on the
+       weakest surface it is used on (#5A6472 on #EEF1F7 = 5.3:1).           */
+    --fg: light-dark(#14181F, #E6E9EF);
+    --fg-muted: light-dark(#5A6472, #98A2B3);
+    --fg-subtle: light-dark(#39414D, #C0C7D4);
 
-    /* --- Hero ------------------------------------------------------------- */
-    --hero-bg: linear-gradient(135deg, light-dark(#014421, #04301B), light-dark(#02301A, #021C10));
-    --hero-fg: #FFFFFF;
-    --hero-fg-muted: #B7D9A8;
-    --hero-accent: #9ED36A;
-    --hero-pill-bg: light-dark(#0B4E2A, #0A3F23);
-    --hero-pill-fg: #C9E3BB;
+    /* --- Certification badges ------------------------------------------------
+       The one deliberate exception to "accent only": tier is amber for Level 1
+       and green for Level 2, which is a rank convention readers already know
+       and is worth more here than palette purity. It stays inside the badge —
+       neither hue appears anywhere else, so the page chrome is unaffected.
 
-    /* --- Certification badges --------------------------------------------- */
+       The tier is carried by the label text first ("Level 1" / "Level 2"); fill
+       and border are the redundant channels, so nothing depends on hue alone.
+       Re-checked against the neutral surfaces these now sit on:
+         L1 #7A4E00 on #FFF3D6 = 6.5:1   L1 #F2C97D on #33260C = 9.4:1
+         L2 #2F5D1C on #E9F4DA = 6.8:1   L2 #A7DD72 on #1B3018 = 8.9:1       */
     --cert1-fg: light-dark(#7A4E00, #F2C97D);
     --cert1-bg: light-dark(#FFF3D6, #33260C);
     --cert1-bd: light-dark(#E8CE8F, #4A3814);
@@ -51,22 +65,20 @@
     --cert2-bg: light-dark(#E9F4DA, #1B3018);
     --cert2-bd: light-dark(#BEDDA0, #2C4A26);
 
-    /* --- Lines & focus ----------------------------------------------------- */
-    --border: light-dark(#D2E0CB, #23392A);
-    --border-strong: light-dark(#A9C4A1, #365243);
-    --focus-ring: light-dark(#2F5D1C, #9ED36A);
-    --ring: 0 0 0 3px color-mix(in srgb, var(--brand) 32%, transparent);
+    /* --- Lines & focus ------------------------------------------------------- */
+    --border: light-dark(#DDE1E8, #262E3A);
+    --border-strong: light-dark(#B9C0CC, #3A4453);
+    --focus-ring: var(--accent);
+    --ring: 0 0 0 3px color-mix(in srgb, var(--accent) 28%, transparent);
 
-    /* --- Derived pairs (local to this file; nothing else references them) --- */
-    /* Pressed chip: the fill is --brand-ink in both themes, but --brand-ink is
-       dark green in light mode and light green in dark mode, so the label has
-       to flip too. #FFFFFF on #2F5D1C = 8.6:1; #0C140F on #9ED36A = 11.4:1. */
-    --chip-on-bg: var(--brand-ink);
-    --chip-on-fg: light-dark(#FFFFFF, #0C140F);
-    /* Error strip. Light: #9F1E1E on #FDECEC = 7.0:1.
-                    Dark:  #F5A9A9 on #2A1416 = 9.3:1. Both pass AA (and AAA). */
+    /* Pressed chip: solid accent fill, so the label flips to the paired ink. */
+    --chip-on-bg: var(--accent);
+    --chip-on-fg: var(--accent-on);
+
+    /* Error strip. Light: #9B1C1C on #FDECEC = 7.1:1.
+                    Dark:  #F5A9A9 on #2A1416 = 9.2:1. Both pass AA (and AAA). */
     --status-error-bg: light-dark(#FDECEC, #2A1416);
-    --status-error-fg: light-dark(#9F1E1E, #F5A9A9);
+    --status-error-fg: light-dark(#9B1C1C, #F5A9A9);
     --status-error-bd: light-dark(#F0C9C9, #4A2124);
 
     /* --- Spacing ----------------------------------------------------------- */
@@ -81,15 +93,19 @@
     --sp-12: 48px;
     --sp-16: 64px;
 
-    /* --- Radii -------------------------------------------------------------- */
-    --r-xs: 4px;
-    --r-sm: 6px;
-    --r-md: 10px;
-    --r-lg: 14px;
-    --r-full: 999px;
+    /* --- Radii ---------------------------------------------------------------
+       Small and near-uniform. Pill shapes read as marketing chrome; on a
+       reference table a 4px corner reads as a control.                       */
+    --r-xs: 3px;
+    --r-sm: 4px;
+    --r-md: 6px;
+    --r-lg: 8px;
 
-    /* --- Type --------------------------------------------------------------- */
-    --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    /* --- Type ----------------------------------------------------------------
+       System stack, no webfont. This drops the two Google Fonts preconnects
+       and the stylesheet request, which is what lets the CSP narrow to
+       `style-src 'self'; font-src 'self'`.                                   */
+    --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
     --fs-2xs: 0.6875rem;
     --fs-xs: 0.75rem;
@@ -97,31 +113,26 @@
     --fs-md: 0.875rem;
     --fs-lg: 1rem;
     --fs-xl: 1.25rem;
-    --fs-hero: clamp(1.75rem, 1.2rem + 2.4vw, 2.5rem);
+    --fs-title: clamp(1.375rem, 1.1rem + 1.2vw, 1.75rem);
     --lh-tight: 1.25;
     --lh-snug: 1.4;
     --lh-normal: 1.55;
-    --tracking-tight: -0.025em;
-    --tracking-wide: 0.08em;
-    --tracking-eyebrow: 0.14em;
+    --tracking-tight: -0.02em;
+    --tracking-wide: 0.07em;
 
-    /* --- Elevation ---------------------------------------------------------- */
-    --shadow-sm:
-      0 1px 2px light-dark(rgba(1, 68, 33, .07), rgba(0, 0, 0, .40));
-    --shadow-lg:
-      0 1px 2px light-dark(rgba(1, 68, 33, .05), rgba(0, 0, 0, .35)),
-      0 12px 28px -12px light-dark(rgba(1, 68, 33, .18), rgba(0, 0, 0, .60));
-    --shadow-xl:
-      0 2px 6px light-dark(rgba(1, 68, 33, .07), rgba(0, 0, 0, .45)),
-      0 24px 48px -16px light-dark(rgba(1, 68, 33, .26), rgba(0, 0, 0, .70));
+    /* --- Elevation ------------------------------------------------------------
+       Two shadows in the whole file: the sticky header's lift, which signals
+       that the thead is pinned over content, and the copy tooltip, which
+       genuinely floats. Panels use a 1px border instead.                     */
+    --shadow-stuck: 0 4px 10px -8px light-dark(rgba(20, 24, 31, .45), rgba(0, 0, 0, .75));
+    --shadow-pop: 0 2px 8px -2px light-dark(rgba(20, 24, 31, .25), rgba(0, 0, 0, .65));
 
-    /* --- Motion -------------------------------------------------------------- */
+    /* --- Motion ---------------------------------------------------------------- */
     --dur-fast: 100ms;
     --dur-base: 160ms;
-    --dur-slow: 240ms;
     --ease-out: cubic-bezier(.22, 1, .36, 1);
 
-    /* --- Measure -------------------------------------------------------------- */
+    /* --- Measure ---------------------------------------------------------------- */
     --content-max: 1120px;
     --gutter: clamp(16px, 4vw, 32px);
   }
@@ -155,7 +166,7 @@
   }
   h1, h2, h3, p, figure { margin: 0; }
   img, svg { display: block; }
-  a { color: var(--brand-ink); }
+  a { color: var(--accent); }
   button,
   input {
     font: inherit;
@@ -171,7 +182,7 @@
 
 
 /* =============================================================================
-   LAYOUT — page shell, hero, footer geometry
+   LAYOUT — page shell, masthead, footer geometry
    ============================================================================= */
 @layer layout {
 
@@ -180,70 +191,76 @@
     max-width: var(--content-max);
     margin-inline: auto;
     padding-inline: var(--gutter);
+    padding-block: var(--sp-8);
   }
 
-  /* --- Hero ---------------------------------------------------------------- */
-  .hero {
-    /* One soft bloom layered over the brand gradient. */
-    background:
-      radial-gradient(circle at 85% -10%, rgba(118, 185, 61, .18), transparent 55%),
-      var(--hero-bg);
-    padding: var(--sp-12) 0 var(--sp-16);
+  /* --- Masthead -------------------------------------------------------------
+     Flat: page background, one hairline at the bottom, no gradient and no
+     inverted band. The title sits on the same row as the theme switch rather
+     than the switch being absolutely pinned over a coloured field.          */
+  .masthead {
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
   }
-  .hero-inner {
+  .masthead-inner {
     max-width: var(--content-max);
     margin-inline: auto;
-    padding-inline: var(--gutter);
-    position: relative;
+    padding: var(--sp-8) var(--gutter);
   }
-  .hero-eyebrow {
+  .masthead-bar {
     display: flex;
-    gap: var(--sp-2);
     align-items: center;
-    font-size: var(--fs-2xs);
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-eyebrow);
-    color: var(--hero-accent);
+    justify-content: space-between;
+    gap: var(--sp-4);
   }
-  .hero-title {
-    font-size: var(--fs-hero);
-    font-weight: 700;
+  .masthead-title {
+    font-size: var(--fs-title);
+    font-weight: 650;
     letter-spacing: var(--tracking-tight);
     line-height: var(--lh-tight);
-    color: var(--hero-fg);
-    margin: var(--sp-3) 0 0;
   }
-  .hero-lede {
-    font-size: var(--fs-lg);
-    line-height: var(--lh-normal);
-    color: var(--hero-fg-muted);
+  .masthead-lede {
+    max-width: 78ch;
     margin-top: var(--sp-3);
+    font-size: var(--fs-md);
+    line-height: var(--lh-normal);
+    color: var(--fg-muted);
   }
-  .hero-stats {
+
+  /* Plain inline run of facts, middot-separated. No pills. */
+  .masthead-meta {
     list-style: none;
-    margin: var(--sp-5) 0 0;
+    margin: var(--sp-4) 0 0;
     padding: 0;
     display: flex;
     flex-wrap: wrap;
-    gap: var(--sp-2);
+    gap: var(--sp-2) var(--sp-3);
+    font-size: var(--fs-sm);
+    color: var(--fg-muted);
+    font-variant-numeric: tabular-nums;
   }
-  .pill {
-    font-size: var(--fs-2xs);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-wide);
-    padding: 5px 11px;
-    border-radius: var(--r-full);
-    background: var(--hero-pill-bg);
-    color: var(--hero-pill-fg);
-    border: 1px solid rgba(255, 255, 255, .08);
+  .masthead-meta li + li::before {
+    content: '\00B7';
+    margin-right: var(--sp-3);
+    color: var(--border-strong);
   }
-  .pill time { font-variant-numeric: tabular-nums; }
+
+  /* The only item on this line that answers a question rather than stating a
+     number, so it takes full text strength while its siblings stay muted. The
+     separator keeps its own colour above, so emphasising the item does not drag
+     the middot along with it.
+
+     app.js rewrites the <time> to a relative phrase ("today", "6 days ago") and
+     parks the exact date on `title`; with JS off, the absolute date written in
+     the markup stands and this rule still applies. */
+  .masthead-meta .meta-updated {
+    color: var(--fg);
+    font-weight: 500;
+  }
 
   /* --- Footer -------------------------------------------------------------- */
   .site-footer {
-    margin-top: var(--sp-12);
+    margin-top: var(--sp-10);
     border-top: 1px solid var(--border);
     background: var(--surface-sunken);
     padding: var(--sp-8) 0 var(--sp-10);
@@ -267,41 +284,36 @@
 @layer components {
 
   /* ---------------------------------------------------------------------------
-     Theme switch — segmented control pinned to the hero
+     Theme switch — segmented control, in the masthead's flow
      ------------------------------------------------------------------------ */
   .theme-switch {
-    position: absolute;
-    top: 0;
-    right: var(--gutter);
     display: inline-flex;
+    flex: none;
     gap: 2px;
-    padding: 4px;
-    border-radius: var(--r-full);
-    background: rgba(255, 255, 255, .08);
-    border: 1px solid rgba(255, 255, 255, .08);
+    padding: 2px;
+    border-radius: var(--r-md);
+    border: 1px solid var(--border);
+    background: var(--surface-sunken);
   }
   .theme-btn {
     width: 30px;
-    height: 30px;
+    height: 28px;
     display: grid;
     place-items: center;
     padding: 0;
     border: 0;
-    border-radius: var(--r-full);
+    border-radius: var(--r-sm);
     background: transparent;
-    color: var(--hero-fg-muted);
+    color: var(--fg-muted);
     cursor: pointer;
     transition:
       background-color var(--dur-fast) var(--ease-out),
       color var(--dur-fast) var(--ease-out);
   }
   .theme-btn[aria-pressed="true"] {
-    background: var(--hero-accent);
-    color: #0C140F;
-  }
-  .theme-btn:focus-visible {
-    outline: 2px solid var(--hero-accent);
-    outline-offset: 2px;
+    background: var(--surface);
+    color: var(--fg);
+    box-shadow: inset 0 0 0 1px var(--border-strong);
   }
   .theme-icon {
     width: 16px;
@@ -309,23 +321,14 @@
   }
 
   /* ---------------------------------------------------------------------------
-     Cards
+     Panels — flat, bordered, no shadow and no overlap trickery
      ------------------------------------------------------------------------ */
   .card {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--r-lg);
-    box-shadow: var(--shadow-lg);
   }
-
-  /* Lifts up over the hero's lower edge. */
-  .card--toolbar {
-    margin-top: -40px;
-    position: relative;
-    z-index: 1;
-    padding: var(--sp-5);
-    border-top: 3px solid var(--brand);
-  }
+  .card--toolbar { padding: var(--sp-4); }
 
   /* `overflow: clip` — NOT `hidden`, which would kill the sticky thead. */
   .card--table {
@@ -339,7 +342,7 @@
      ------------------------------------------------------------------------ */
   .toolbar-row--search {
     display: flex;
-    gap: var(--sp-3);
+    gap: var(--sp-2);
     align-items: center;
     flex-wrap: wrap;
   }
@@ -360,8 +363,8 @@
   }
   .search-field input[type="search"] {
     width: 100%;
-    height: 40px;
-    padding: 0 var(--sp-3) 0 36px;
+    height: 36px;
+    padding: 0 var(--sp-3) 0 34px;
     border: 1px solid var(--border-strong);
     border-radius: var(--r-sm);
     background: var(--surface);
@@ -375,21 +378,21 @@
   .search-field input[type="search"]:focus-visible {
     outline: 2px solid var(--focus-ring);
     outline-offset: 1px;
-    border-color: var(--brand);
+    border-color: var(--accent);
     box-shadow: var(--ring);
   }
   .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    height: 40px;
-    padding: 0 var(--sp-4);
+    height: 36px;
+    padding: 0 var(--sp-3);
     border: 1px solid var(--border-strong);
     border-radius: var(--r-sm);
     background: var(--surface);
     color: var(--fg);
     font-size: var(--fs-md);
-    font-weight: 600;
+    font-weight: 500;
     cursor: pointer;
     white-space: nowrap;
     transition:
@@ -410,7 +413,9 @@
     justify-content: space-between;
     flex-wrap: wrap;
     gap: var(--sp-3);
-    margin-top: var(--sp-4);
+    margin-top: var(--sp-3);
+    padding-top: var(--sp-3);
+    border-top: 1px solid var(--border);
   }
   .result-count {
     font-size: var(--fs-sm);
@@ -431,13 +436,13 @@
   .chip {
     display: inline-flex;
     align-items: center;
-    height: 30px;
+    height: 28px;
     padding: 0 var(--sp-3);
-    border-radius: var(--r-full);
+    border-radius: var(--r-sm);
     border: 1px solid var(--border-strong);
     background: transparent;
     font-size: var(--fs-sm);
-    font-weight: 600;
+    font-weight: 500;
     color: var(--fg-muted);
     cursor: pointer;
     transition:
@@ -482,7 +487,7 @@
 
   /* --- Column sizing, by name, never by nth-child -------------------------- */
   /* Sized to the typical name, not the longest one. Row-weighted across the 93
-     rows the model name is a 114px median / 153px p90 at 14px Inter 600; only
+     rows the model name is a ~114px median / ~153px p90 at 14px 600; only
      "Security Key NFC Enterprise Ed." (237px, 7 rows) exceeds that, and letting
      it wrap costs nothing because two 14px lines (39px) still clear the 42px
      thumbnail that sets the row height. Sizing for that one outlier meant a
@@ -502,9 +507,9 @@
     top: 0;
     z-index: 2;
     background: var(--th-bg);
-    padding: var(--sp-3) var(--sp-4);
+    padding: var(--sp-2) var(--sp-4);
     font-size: var(--fs-2xs);
-    font-weight: 700;
+    font-weight: 600;
     text-transform: uppercase;
     letter-spacing: var(--tracking-wide);
     color: var(--fg-subtle);
@@ -521,7 +526,7 @@
   #csvTable.is-stuck thead th {
     box-shadow:
       inset 0 -1px 0 var(--border),
-      0 6px 12px -8px rgba(0, 0, 0, .25);
+      var(--shadow-stuck);
   }
   .th-sort {
     display: inline-flex;
@@ -552,12 +557,12 @@
   }
   th.asc .th-sort::after {
     content: '\25B4';
-    color: var(--brand-ink);
+    color: var(--accent);
     opacity: 1;
   }
   th.desc .th-sort::after {
     content: '\25BE';
-    color: var(--brand-ink);
+    color: var(--accent);
     opacity: 1;
   }
 
@@ -632,22 +637,21 @@
   td[data-col="aaguid"]:focus-visible::after { opacity: .55; }
   td[data-col="aaguid"].is-copied::after {
     content: '\2713';
-    color: var(--brand-ink);
+    color: var(--accent);
     opacity: 1;
   }
 
   /* --- Certification badges -------------------------------------------------- */
   /* No leading dot: the tier is already carried by the label text itself
-     ("Level 1" / "Level 2") plus a distinct border colour, so nothing here
-     depends on hue alone and the dot was pure decoration. Padding is
-     symmetric now that there is no glyph to sit closer to the left edge. */
+     ("Level 1" / "Level 2") plus a distinct fill and border, so nothing here
+     depends on hue alone and the dot was pure decoration. */
   .cert {
     display: inline-flex;
     align-items: center;
-    padding: 3px 10px;
-    border-radius: var(--r-full);
+    padding: 2px 8px;
+    border-radius: var(--r-xs);
     font-size: var(--fs-xs);
-    font-weight: 600;
+    font-weight: 500;
     border: 1px solid;
   }
   .cert-l1 {
@@ -666,14 +670,14 @@
      ------------------------------------------------------------------------ */
   .table-status {
     padding: var(--sp-3) var(--sp-4);
-    background: light-dark(#F1F7EA, #16261A);
-    color: var(--brand-ink);
+    background: var(--surface-sunken);
+    color: var(--fg-subtle);
     box-shadow: inset 0 -1px 0 var(--border);
     font-size: var(--fs-md);
   }
 
-  /* Error tint. Light: #9F1E1E on #FDECEC = 7.0:1.
-     Dark:  #F5A9A9 on #2A1416 = 9.3:1. Both clear AA (and AAA) for body text. */
+  /* Error tint. Light: #9B1C1C on #FDECEC = 7.1:1.
+     Dark:  #F5A9A9 on #2A1416 = 9.2:1. Both clear AA (and AAA) for body text. */
   .table-status.is-error {
     background: var(--status-error-bg);
     color: var(--status-error-fg);
@@ -701,7 +705,7 @@
   }
 
   /* ---------------------------------------------------------------------------
-     Floaters — copy tooltip and model hover card
+     Copy tooltip — the one element that genuinely floats
      ------------------------------------------------------------------------ */
   .copy-tooltip {
     position: fixed;
@@ -710,9 +714,9 @@
     padding: 4px 8px;
     border-radius: var(--r-xs);
     font-size: var(--fs-xs);
-    background: light-dark(#14201A, #E6EFE6);
-    color: light-dark(#E6EFE6, #14201A);
-    box-shadow: var(--shadow-sm);
+    background: light-dark(#14181F, #E6E9EF);
+    color: light-dark(#E6E9EF, #14181F);
+    box-shadow: var(--shadow-pop);
     pointer-events: none;
     white-space: nowrap;
   }
@@ -732,7 +736,7 @@
   .noscript-panel p + p { margin-top: var(--sp-2); }
   .noscript-panel strong { font-size: var(--fs-xl); display: block; }
   .noscript-panel a {
-    color: var(--brand-ink);
+    color: var(--accent);
     font-weight: 600;
   }
 
@@ -761,13 +765,15 @@
     padding: 10px var(--sp-4);
     clip: auto;
     overflow: visible;
-    border-radius: var(--r-full);
-    background: var(--brand);
-    color: var(--brand-deep);
+    border-radius: var(--r-sm);
+    /* Fixed pair, not the themed token: this sits over whatever is beneath it,
+       and #FFFFFF on #4A45C8 is 7.1:1 in both themes. */
+    background: var(--accent-solid);
+    color: #FFFFFF;
     font-size: var(--fs-md);
-    font-weight: 700;
+    font-weight: 600;
     text-decoration: none;
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--shadow-pop);
   }
 
   /* ---------------------------------------------------------------------------
@@ -778,7 +784,7 @@
   /* <h2> reset to a small section label. */
   .footer-heading {
     font-size: var(--fs-2xs);
-    font-weight: 700;
+    font-weight: 600;
     text-transform: uppercase;
     letter-spacing: var(--tracking-wide);
     color: var(--fg-subtle);
@@ -798,7 +804,7 @@
   }
   .footer-links li + li { margin-top: var(--sp-2); }
   .footer-inner a {
-    color: var(--brand-ink);
+    color: var(--accent);
     text-decoration: underline;
     text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
     text-underline-offset: 2px;
@@ -811,25 +817,22 @@
   @media (hover: hover) and (pointer: fine) {
 
     .btn:hover:not(:disabled) {
-      border-color: var(--brand);
+      border-color: var(--accent);
       background: var(--row-hover);
     }
     .chip:hover:not([aria-pressed="true"]) {
-      border-color: var(--brand);
+      border-color: var(--accent);
       color: var(--fg);
     }
-    .theme-btn:hover:not([aria-pressed="true"]) {
-      background: rgba(255, 255, 255, .12);
-      color: var(--hero-fg);
-    }
-    .th-sort:hover { color: var(--brand-ink); }
+    .theme-btn:hover:not([aria-pressed="true"]) { color: var(--fg); }
+    .th-sort:hover { color: var(--accent); }
     #csvTable tbody tr:hover td:not(.empty-state) { background: var(--row-hover); }
 
-    /* The 2px brand edge is composed INTO the cell's inset shadow so the
+    /* The 2px accent edge is composed INTO the cell's inset shadow so the
        row's bottom rule survives. */
     #csvTable tbody tr:hover td:not(.empty-state):first-child {
       box-shadow:
-        inset 2px 0 0 0 var(--brand),
+        inset 2px 0 0 0 var(--accent),
         inset 0 -1px 0 var(--border);
     }
     #csvTable tbody tr:hover td[data-col="aaguid"]::after { opacity: .55; }
@@ -837,11 +840,11 @@
   }
 
   /* ---------------------------------------------------------------------------
-     Breakpoint: 1024px — tighten the hero, give the table room
+     Breakpoint: 1024px — give the table room
      ------------------------------------------------------------------------ */
   @media (max-width: 1024px) {
 
-    .hero { padding: var(--sp-10) 0 var(--sp-16); }
+    .masthead-inner { padding-block: var(--sp-6); }
 
     /* Priority inverts as the table narrows: the AAGUID cannot wrap without
        becoming hard to read, but the model name can — and wrapping it is free,
@@ -866,7 +869,6 @@
   @media (max-width: 768px) {
 
     .footer-inner { grid-template-columns: 1fr; }
-    .card--toolbar { padding: var(--sp-4); }
     .search-field { flex: 1 1 100%; }
     .export-controls { margin-left: 0; }
     .toolbar-row--meta { align-items: flex-start; }
@@ -882,9 +884,8 @@
     .card--table {
       border: 0;
       background: transparent;
-      box-shadow: none;
       padding: 0;
-      margin-top: var(--sp-5);
+      margin-top: var(--sp-4);
     }
     .table-status,
     .noscript-panel {
@@ -920,7 +921,6 @@
       border-radius: var(--r-md);
       background: var(--surface);
       overflow: hidden;
-      box-shadow: var(--shadow-sm);
     }
 
     /* Zebra striping off in card mode. */
@@ -971,7 +971,6 @@
     #csvTable tbody tr:has(td.empty-state) {
       border: 0;
       background: transparent;
-      box-shadow: none;
       margin: 0;
     }
     #csvTable tbody td.empty-state {
@@ -983,17 +982,23 @@
   }
 
   /* ---------------------------------------------------------------------------
-     Breakpoint: 520px — theme switch drops into the flow
+     Breakpoint: 520px — title and theme switch stack
      ------------------------------------------------------------------------ */
   @media (max-width: 520px) {
 
-    .theme-switch {
-      position: static;
-      margin-bottom: var(--sp-4);
-      width: max-content;
+    /* Switch takes the first line on its own, title the second at full width.
+       Ordering is done with `order`, not `row-reverse`: reversing the main axis
+       does not reverse the order the wrapped lines stack in, so the switch
+       still landed under the title. */
+    .masthead-bar {
+      flex-wrap: wrap;
+      align-items: flex-start;
     }
-    .hero { padding: var(--sp-8) 0 var(--sp-16); }
-    .toolbar-row--search { gap: var(--sp-2); }
+    .theme-switch { order: 1; }
+    .masthead-title {
+      order: 2;
+      flex: 1 1 100%;
+    }
     .toolbar-row--search > .btn,
     .export-controls { flex: 1 1 100%; }
     .export-controls > .btn { flex: 1 1 0; }
