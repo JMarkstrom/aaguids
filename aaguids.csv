@@ -14,6 +14,7 @@ YubiKey 5 NFC,5.7,1ac71f64-468d-4fe0-bef1-0e5f2f551f18,Level 2
 YubiKey 5 NFC,5.7,6ab56fad-881f-4a43-acb2-0be065924522,Level 2
 YubiKey 5 NFC,5.8,f4ce5fc0-57d3-46f5-a736-efb7d5bc63b5,Level 2
 YubiKey 5 NFC EPIN,5.7,662ef48a-95e2-4aaa-a6c1-5b9c40375824,Level 2
+YubiKey 5 NFC EPIN,5.7,b2c1a50b-dad8-4dc7-ba4d-0ce9597904bc,Level 2
 YubiKey 5 NFC EPIN,5.8,0ebd9f2c-f685-441c-8c3e-a02a234a840a,Level 2
 YubiKey 5 NFC CCN,5.7,3aa78eb1-ddd8-46a8-a821-8f8ec57a7bd5,Level 2
 YubiKey 5C NFC,5.2,2fc0579f-8113-47ea-b116-bb5a8db9202a,Level 1
@@ -27,6 +28,7 @@ YubiKey 5C NFC,5.7,1ac71f64-468d-4fe0-bef1-0e5f2f551f18,Level 2
 YubiKey 5C NFC,5.7,6ab56fad-881f-4a43-acb2-0be065924522,Level 2
 YubiKey 5C NFC,5.8,f4ce5fc0-57d3-46f5-a736-efb7d5bc63b5,Level 2
 YubiKey 5C NFC EPIN,5.7,662ef48a-95e2-4aaa-a6c1-5b9c40375824,Level 2
+YubiKey 5C NFC EPIN,5.7,b2c1a50b-dad8-4dc7-ba4d-0ce9597904bc,Level 2
 YubiKey 5C NFC EPIN,5.8,0ebd9f2c-f685-441c-8c3e-a02a234a840a,Level 2
 YubiKey 5 Nano,5.1,cb69481e-8ff7-4039-93ec-0a2729a154a8,Level 1
 YubiKey 5 Nano,5.2,ee882879-721c-4913-9775-3dfcce97072a,Level 1
